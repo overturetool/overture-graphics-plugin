@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "outDir": "./dist/"
+    },
+    "compileOnSave": false,
+    "exclude": [
+        "node_modules",
+        "dist",
+        "typings",
+        "bower_components"
+    ]
+}

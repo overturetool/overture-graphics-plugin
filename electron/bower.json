@@ -1,0 +1,12 @@
+{
+  "name": "tempo-ui",
+  "productName": "TEMPO Plotting Tool",
+  "version": "1.0.0",
+  "description": "Tool for visualizing TEMPO model variables",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "Chart.js": "^2.0.2",
+    "jquery": "^2.2.3"
+  }
+}
