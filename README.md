@@ -1,14 +1,14 @@
 ﻿# tempo-plotting-tool
 
-## Electron 
-### Initialize
-1. ´npm install´
-2. ´gulp init´
+### Electron 
+##### Initialize
+1. `npm install`
+2. `gulp init`
 
-### Run
-1. ´gulp´
-2. ´npm start´
+##### Run
+1. `gulp`
+2. `npm start`
 
-## Java
-### Package
-TODO
+### Java
+##### Package
+`TODO`
