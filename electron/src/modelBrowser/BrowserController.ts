@@ -1,9 +1,9 @@
 //TODO: DUMMY REFERENCE UNTIL CHART MAKES A TYPESCRIPT DEFINITION FILE!
 
-///<reference path="../../typings/browser/ambient/github-electron/index.d.ts"/>
-///<reference path="../../typings/browser/ambient/node/index.d.ts"/>
-///<reference path="../../typings/browser/ambient/jquery/index.d.ts"/>
-///<reference path="../../typings/browser/ambient/w2ui/index.d.ts"/>
+///<reference path="../../typings/globals/github-electron/index.d.ts"/>
+///<reference path="../../typings/globals/node/index.d.ts"/>
+///<reference path="../../typings/globals/jquery/index.d.ts"/>
+///<reference path="../../typings/globals/w2ui/index.d.ts"/>
 
 import {AppEvents} from "../AppEvents";
 import * as App from  "../App";

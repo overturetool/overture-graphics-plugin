@@ -4,7 +4,7 @@ import * as App from  "./App"
 import {BrowserController} from "./modelBrowser/BrowserController"
 import {PlotController} from "./plot/PlotController"
 import {AppMenuHandler} from "./AppMenuHandler"
-import {WsServer} from "./protocol/wsServer"
+import {SubscriptionClient} from "./protocol/SubscriptionClient";
 
 // constants
 var mainViewId: string = "mainView";
@@ -22,7 +22,6 @@ class InitializationController {
         this.setTitle();
         this.configureLayout();
         this.loadViews();
-        wsServer.initialize();
     }
     
     private configureLayout() {
@@ -75,8 +74,10 @@ var plotController: PlotController = new PlotController(menuHandler);
 var init = new InitializationController();
 
 // Start WebSocket server and forward messages to plotController addPoint
-var wsServer = new WsServer("localhost", 8080);
-wsServer.setOnMessage(plotController.addPoint);
+//var wsServer = new WsServer("localhost", 8080);
+//wsServer.setOnMessage(plotController.addPoint);
+var client = new SubscriptionClient();
+client.connect("ws://localhost:8080/subscription");
 
 menuHandler.openChartView = (path) => {
     $(init.mainView).load("plot/PlotView.html", () => {
