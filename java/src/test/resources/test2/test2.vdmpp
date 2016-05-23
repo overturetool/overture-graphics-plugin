@@ -1,0 +1,14 @@
+class Test2
+
+instance variables
+
+var_int: int;
+var_real:real;
+
+
+operations
+
+public run: ()==>()
+run()==var_real:=5.0;
+
+end Test2

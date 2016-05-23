@@ -1,0 +1,8 @@
+class Test1
+
+instance variables
+
+var_int: int;
+var_real:real;
+
+end Test1
