@@ -10,7 +10,7 @@
 
     <properties>
         <jetty.version>9.2.11.v20150529</jetty.version>
-        <overture.version>2.3.5-SNAPSHOT</overture.version>
+        <overture.version>2.3.4</overture.version>
     </properties>
 
     <dependencies>

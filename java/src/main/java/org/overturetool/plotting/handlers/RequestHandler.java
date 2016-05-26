@@ -2,8 +2,10 @@ package org.overturetool.plotting.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.overturetool.plotting.interpreter.ModelInteraction;
 import org.overturetool.plotting.protocol.Message;
-import org.overturetool.plotting.protocol.ModelTree;
+import org.overturetool.plotting.protocol.ModelStructure;
+import org.overturetool.plotting.protocol.Node;
 import org.overturetool.plotting.protocol.Request;
 
 import javax.websocket.Session;
@@ -14,22 +16,24 @@ import java.lang.reflect.Type;
  * Created by John on 19-05-2016.
  */
 public class RequestHandler extends MessageHandler<Request> {
+    private ModelInteraction modelInteraction;
+
+    public RequestHandler(ModelInteraction modelInteraction) {
+
+        this.modelInteraction = modelInteraction;
+    }
+
     @Override
     public void handle(Request message, Session session) {
         if(message.request.equals("GetModelInfo")) {
             try {
-                // TODO: Return tree with model info
-                ModelTree t = new ModelTree();
-                t.tree.type = "class";
-                t.tree.name = "VDMModel";
-                ModelTree.Node plot3d = t.tree.addNode("3d","seqOfSeq");
-                plot3d.addNode("Congestion","seqOfInt");
-                plot3d.addNode("Pollution","seqOfInt");
-                ModelTree.Node plot2d = t.tree.addNode("2d","seqOfSeq");
-                plot2d.addNode("Congestion","seqOfInt");
-                plot2d.addNode("Pollution","seqOfInt");
+                ModelStructure t = modelInteraction.getModelStructure();
 
-                String serialized = new Gson().toJson(t);
+                Message<ModelStructure> msg = new Message<>();
+                msg.data = t;
+                msg.type = ModelStructure.messageType;
+
+                String serialized = new Gson().toJson(msg);
 
                 session.getBasicRemote().sendText(serialized);
             } catch (IOException e) {

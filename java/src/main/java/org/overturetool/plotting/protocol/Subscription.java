@@ -5,8 +5,7 @@ package org.overturetool.plotting.protocol;
  */
 public class Subscription {
     public static final String messageType = "SUB";
-    public String className;
-    public String variableName;
+    public String variableName = "";
 
     public Subscription() {}
 }

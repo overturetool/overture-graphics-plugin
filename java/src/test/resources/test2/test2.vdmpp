@@ -5,7 +5,6 @@ instance variables
 var_int: int;
 var_real:real;
 
-
 operations
 
 public run: ()==>()

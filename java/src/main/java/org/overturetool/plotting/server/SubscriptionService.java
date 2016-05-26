@@ -27,7 +27,7 @@ public class SubscriptionService {
 
     @OnMessage
     public void onMessage(String txt, Session session) throws IOException {
-        System.out.println("Message received: " + txt);
+        System.out.println("Message received at server: " + txt);
 
         // Deserialize message to get message type
         Gson gson = new Gson();
@@ -43,7 +43,6 @@ public class SubscriptionService {
     @OnClose
     public void onClose(CloseReason reason, Session session) {
         System.out.println("Closing a WebSocket due to " + reason.getReasonPhrase());
-
     }
 
     public void startServer(int port) {

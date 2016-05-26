@@ -1,0 +1,43 @@
+class Test3
+
+    instance variables
+
+    var_int: seq of int;
+    var_real:real;
+    var_test1:Test1 := new Test1();
+
+    operations
+
+    public run: ()==>()
+    run()== (
+        var_real:=5.0;
+        var_test1.setReal(5.0);
+    )
+
+end Test3
+
+class Test2
+
+    instance variables
+
+    var_int: int;
+    var_real:real;
+
+end Test2
+
+class Test1
+
+    instance variables
+
+    var_int: int;
+    var_real:real;
+    var_test2:Test2 := new Test2();
+
+    operations
+
+    public setReal: real ==> ()
+    setReal(a) == (
+        var_real:=a;
+    );
+
+end Test1
