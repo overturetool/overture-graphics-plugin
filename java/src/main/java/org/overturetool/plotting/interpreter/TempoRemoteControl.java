@@ -80,7 +80,7 @@ public class TempoRemoteControl implements RemoteControl
 	 */
 	public Value start(String runExp) throws Exception
 	{
-		return interpreter.valueExecute(ROOT_NAME + "." + runExp);
+		return this.modelInteraction.start(runExp);
 	}
 
 	/**

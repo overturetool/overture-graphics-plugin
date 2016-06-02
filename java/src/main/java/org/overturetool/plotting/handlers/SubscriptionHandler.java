@@ -42,12 +42,6 @@ public class SubscriptionHandler extends MessageHandler<Subscription> {
         // Else attach listener
         try {
             modelInteraction.attachListener(n, new SessionVarListener(n.name, n.ptype, session));
-            /*modelInteraction.attachListener(n, new ValueListener() {
-                @Override
-                public void changedValue(ILexLocation iLexLocation, Value value, Context context) throws AnalysisException {
-                    System.out.println("yellow!");
-                }
-            });*/
         } catch (Exception e) {
             e.printStackTrace();
         }

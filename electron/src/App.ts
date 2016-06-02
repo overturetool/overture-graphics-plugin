@@ -1,11 +1,8 @@
+'use strict';
 ///<reference path="../typings/globals/github-electron/index.d.ts"/>
 ///<reference path="../typings/globals/node/index.d.ts"/>
-
-
-import fs = require('fs');
-import Path = require('path');
-
-import {AppEvents} from "./AppEvents";
+const fs = require('fs');
+const Path = require('path');
 
 export default class App {
     app: Electron.App;
@@ -54,31 +51,9 @@ export default class App {
     private fireEvent(event: string) {
         if (this.window != undefined) {
             //Fire an event to inform all controlls on main window that the project has changed
-            this.window.webContents.send(AppEvents.PROJECT_CHANGED);
             // console.info("Window: " + this.window);
             console.info("fire event: " + event);
         }
     }
 
 }
-
-// http://stackoverflow.com/questions/29758765/json-to-typescript-class-instance
-class SerializationHelper {
-    static toInstance<T>(obj: T, json: string): T {
-        var jsonObj = JSON.parse(json);
-
-        if (typeof (<any>obj)["fromJSON"] === "function") {
-             (<any>obj)["fromJSON"](jsonObj);
-        }
-        else {
-            for (var propName in jsonObj) {
-                 (<any>obj)[propName] = jsonObj[propName]
-            }
-        }
-
-        return obj;
-    }
-}
-
-
-export {App}

@@ -15,6 +15,7 @@ import org.overturetool.plotting.protocol.UpdateValue;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class SessionVarListener implements ValueListener
@@ -35,6 +36,9 @@ public class SessionVarListener implements ValueListener
 	public void changedValue(ILexLocation loc, Value val, Context ctxt)
 			throws AnalysisException
 	{
+		if(!session.isOpen())
+			return;
+
 		// Initialize message
 		Message<UpdateValue> msg = new Message<>();
 		msg.type = UpdateValue.messageType;
@@ -127,7 +131,7 @@ public class SessionVarListener implements ValueListener
 
 		switch (getPrimitive(first,ctxt)) {
 			case AIntNumericBasicType: {
-				LinkedList<Long> res = new LinkedList<>();
+				ArrayList<Long> res = new ArrayList<>();
 
 				for (Value v : list) {
 					res.add(v.intValue(ctxt));
@@ -135,7 +139,7 @@ public class SessionVarListener implements ValueListener
 				return gson.toJson(res);
 			}
 			case ARealNumericBasicType: {
-				LinkedList<Double> res = new LinkedList<>();
+				ArrayList<Double> res = new ArrayList<>();
 
 				for (Value v : list) {
 					res.add(v.realValue(ctxt));
@@ -143,7 +147,7 @@ public class SessionVarListener implements ValueListener
 				return gson.toJson(res);
 			}
 			case ABooleanBasicType: {
-				LinkedList<Boolean> res = new LinkedList<>();
+				ArrayList<Boolean> res = new ArrayList<>();
 
 				for (Value v : list) {
 					res.add(v.boolValue(ctxt));
@@ -151,7 +155,7 @@ public class SessionVarListener implements ValueListener
 				return gson.toJson(res);
 			}
 			case ACharBasicType: {
-				LinkedList<String> res = new LinkedList<>();
+				ArrayList<String> res = new ArrayList<>();
 
 				for (Value v : list) {
 					res.add(v.stringValue(ctxt));

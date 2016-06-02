@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.overture.interpreter.values.Value;
 import org.overturetool.plotting.RunModel;
 import org.overturetool.plotting.client.SubscriptionClient;
+import org.overturetool.plotting.handlers.RequestHandler;
 import org.overturetool.plotting.interpreter.TempoRemoteControl;
 import org.overturetool.plotting.protocol.Message;
 import org.overturetool.plotting.protocol.Request;
@@ -89,10 +90,15 @@ public class SubscriptionServiceTest {
         client.connect(dest);
         client.sendMessage(serialized);
 
-        Thread.sleep(1000);
+        Thread.sleep(100000000);
 
-        Value val = remote.start("run()");
-        System.out.println("Interpreter exited with: " + val);
+        // Start model
+        Message<Request> rq = new Message<>();
+        rq.type = Request.messageType;
+        rq.data = new Request();
+        rq.data.request = Request.RUN_MODEL;
+        serialized = gson.toJson(rq);
+        client.sendMessage(serialized);
 
         // Wait to receive message
         Thread.sleep(1000);

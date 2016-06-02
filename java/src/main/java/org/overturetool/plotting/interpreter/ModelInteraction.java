@@ -103,4 +103,16 @@ public class ModelInteraction {
 
         return bld.build();
     }
+
+    /**
+     * Starts the interpreter with a 'new' expression e.g. 'new A()', and a run method like run() from A returns only if
+     * the model exits
+     * @param runExp
+     * @return
+     * @throws Exception
+     */
+    public Value start(String runExp) throws Exception
+    {
+        return interpreter.valueExecute(ROOT_NAME + "." + runExp);
+    }
 }

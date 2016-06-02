@@ -3,10 +3,12 @@
 const electron = require('electron');
 const fs = require('fs');
 const path = require('path');
-var TempoApp = require("./App").default;
+const dialog = require('dialog');
+const TempoApp = require("./App").default;
 
 // Module to control application life.
-const app = electron.app;
+const app = electron.app
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
@@ -14,7 +16,7 @@ let tempo = new TempoApp(app, process.platform);
 global.App = tempo;
 
 // Definitions needed for menu construction
-var defaultMenu = require('electron-default-menu')
+var defaultMenu = require('./menu/menuTemplate')
 var Menu = require('menu')
 
 
@@ -31,24 +33,21 @@ function createWindow() {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
-
   tempo.setWindow(mainWindow);
 
-
   // Get template for default menu 
-  var menu = defaultMenu();
+  var menu = defaultMenu;
   let mw = mainWindow;
 
   // Add custom menu 
-  menu.splice(4, 0, {
-    label: 'Tempo',
+  menu.splice(0, 0, {
+    label: 'File',
     submenu: [
       {
-        label: 'Read Model',
+        label: 'Add plot',
         click: function (item, focusedWindow) {
-          alert("Model read");
+          dialog.showErrorBox("YOYOYO", "ADDED PLOT");
         }
-
       }
     ]
   })
@@ -63,16 +62,6 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
-  /* //We cannot fire any events indicating that the active project has been loaded since we dont know when all recievers are loaded and ready
-    mainWindow.on('minimize', function () {
-      //Activate project
-      console.info("Setting active project on show")
-      let p = global.App.getActiveProject();
-      console.info(p);
-      global.App.setActiveProject(p);
-  
-    });*/
 }
 
 // This method will be called when Electron has finished

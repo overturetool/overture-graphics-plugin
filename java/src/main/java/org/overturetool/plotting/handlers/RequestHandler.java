@@ -25,7 +25,7 @@ public class RequestHandler extends MessageHandler<Request> {
 
     @Override
     public void handle(Request message, Session session) {
-        if(message.request.equals("GetModelInfo")) {
+        if(message.request.equals(Request.GET_MODEL_INFO)) {
             try {
                 ModelStructure t = modelInteraction.getModelStructure();
 
@@ -37,6 +37,20 @@ public class RequestHandler extends MessageHandler<Request> {
 
                 session.getBasicRemote().sendText(serialized);
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(message.request.equals(Request.RUN_MODEL)) {
+            try {
+                Message<String> msg = new Message<>();
+                msg.type = "RESPONSE";
+                msg.data = "OK";
+                String serialized = new Gson().toJson(msg);
+
+                session.getBasicRemote().sendText(serialized);
+                this.modelInteraction.start("run()");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -1,4 +1,6 @@
 
 export class AppMenuHandler {
-    openChartView: (path: string) => void;
+    openChartView: (id: string) => void;
+    openAddPlotView: () => void;
+    runModel: () => void;
 }

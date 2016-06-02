@@ -13,6 +13,7 @@
     "bower": "^1.7.9",
     "electron-debug": "^0.5.0",
     "jszip": "^3.0.0",
+    "typescript-collections": "^1.1.2",
     "websocket": "*"
   },
   "devDependencies": {
@@ -33,7 +34,6 @@
     "gulp-watch": "^4.3.5",
     "main-bower-files": "^2.11.1",
     "merge-stream": "^1.0.0",
-    "tslint": "^3.7.0",
-    "typescript-collections": "^1.1.2"
+    "tslint": "^3.7.0"
   }
 }
