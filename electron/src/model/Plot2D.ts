@@ -10,7 +10,7 @@ export class Plot2D {
     private _count: number = 0;
     private _data: Points = new Points();
     private _shown: boolean = false;
-    private _changed: (string) => void;
+    private _changed: (plot : string) => void;
     private _title: string;
 
     constructor() {
@@ -37,7 +37,7 @@ export class Plot2D {
         this._shown = value;
     }
 
-    set changed(value : (string) => void) {
+    set changed(value : (plot : string) => void) {
         this._changed = value;
     }
 

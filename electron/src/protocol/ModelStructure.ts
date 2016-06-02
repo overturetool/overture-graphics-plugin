@@ -4,8 +4,8 @@
 import {Node} from "./Node";
 
 export class ModelStructure extends Node {
-    static messageType: String = "MODEL";
-    rootClass: String;
+    static messageType: string = "MODEL";
+    rootClass: string;
 
     getAllVariables() : Array<string> {
         var res = new Array<string>();

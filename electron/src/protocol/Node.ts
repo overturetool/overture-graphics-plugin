@@ -3,7 +3,7 @@
  */
 
 export class Node {
-    name: String;
-    type: String;
+    name: string;
+    type: string;
     children: Array<Node>;
 }

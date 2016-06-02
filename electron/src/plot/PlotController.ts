@@ -58,7 +58,7 @@ export class PlotController {
         this._plots.setValue(title, plot);
 
         // Subscribe to variable
-        this._subClient.subscribe(variable, (data) => {
+        this._subClient.subscribe(variable, (data : any) => {
             plot.addPoint(+data.value);
             plot.changed = this.update2DPlot.bind(this);
         });
@@ -73,7 +73,10 @@ export class PlotController {
             return;
 
         // Set shown false for each plot
-        this._plots.forEach((k : string, v : Plot2D) => v.shown=false);
+        //this._plots.forEach((k : string, v : Plot2D) => v.shown=false);
+        for(var i = 0; i < this._plots.size(); i++) {
+            this._plots.values()[i].shown = false;
+        }
 
         // Retrieve trace
         let trace = {x: plot.data.x, y: plot.data.y, type: plot.data.type, name: plot.title};
