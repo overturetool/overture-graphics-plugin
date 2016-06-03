@@ -10,6 +10,8 @@ import org.overture.interpreter.values.*;
 import org.overturetool.plotting.protocol.ModelStructure;
 import org.overturetool.plotting.protocol.Node;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.function.Supplier;
@@ -80,6 +82,8 @@ public class ModelInteraction {
      * @return
      */
     public String getRootClassName() {
+        String[] exclude = new String[] {"Test","TestCase","TestSuite","TestResult","TestListener","TestRunner"};
+
         for (SClassDefinition cdef : ((ClassInterpreter) interpreter.getInterpreter()).getClasses())
         {
             for (PDefinition def : cdef.getDefinitions())
@@ -87,7 +91,8 @@ public class ModelInteraction {
                 if (def instanceof AExplicitOperationDefinition)
                 {
                     if(def.getName().getName().toLowerCase().equals("run"))
-                        return cdef.getName().getName();
+                        if(!Arrays.asList(exclude).contains(cdef.getName().getName()))
+                            return cdef.getName().getName();
                 }
             }
         }

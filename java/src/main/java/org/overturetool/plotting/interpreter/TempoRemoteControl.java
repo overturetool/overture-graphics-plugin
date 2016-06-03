@@ -32,7 +32,7 @@ public class TempoRemoteControl implements RemoteControl
 	}
 
 	private static final String ROOT_NAME = "root";
-	private final IInterpreterReadyCallback callback;
+	private IInterpreterReadyCallback callback = null;
 	private RemoteInterpreter interpreter;
 	private ModelStructure structure = null;
 	private ModelInteraction modelInteraction;
@@ -49,6 +49,11 @@ public class TempoRemoteControl implements RemoteControl
 		this.callback = callback;
 	}
 
+
+	public TempoRemoteControl()
+	{
+	}
+
 	/**
 	 * Method to be called from overture
 	 * @param interpreter
@@ -61,6 +66,9 @@ public class TempoRemoteControl implements RemoteControl
 
 		// Create instance
 		String rootClassName = modelInteraction.getRootClassName();
+		if(rootClassName == null)
+			throw new NullPointerException("No root class was found!");
+
 		interpreter.create(ROOT_NAME, "new " + rootClassName + "()");
 
 		this.setupServer();

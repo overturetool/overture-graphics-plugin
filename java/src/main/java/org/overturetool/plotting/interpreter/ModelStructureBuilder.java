@@ -16,7 +16,7 @@ import org.overturetool.plotting.protocol.Node;
 public class ModelStructureBuilder {
     private RemoteInterpreter interpreter;
     private int levels = 0;
-    private boolean debug = true;
+    private boolean debug = false;
     private ModelStructure model = null;
 
     public ModelStructureBuilder(RemoteInterpreter interpreter) {

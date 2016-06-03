@@ -90,7 +90,7 @@ public class SubscriptionServiceTest {
         client.connect(dest);
         client.sendMessage(serialized);
 
-        Thread.sleep(100000000);
+        Thread.sleep(1000);
 
         // Start model
         Message<Request> rq = new Message<>();

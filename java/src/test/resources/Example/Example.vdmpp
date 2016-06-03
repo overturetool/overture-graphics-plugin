@@ -1,0 +1,40 @@
+class Example
+
+    instance variables
+
+    var_int: seq of int;
+    var_real:real := 0;
+    var_other:Other := new Other();
+
+    operations
+
+    public run: ()==>()
+    run()== (
+        dcl worldTick:real := 0;
+
+        while true do (
+            worldTick := worldTick + 0.1;
+            if (floor(worldTick) > 0 and floor(worldTick) mod 100000 = 0) then (
+                var_real := (var_real+1.0) mod 100 ;
+                var_other.setReal(worldTick+1);
+            );
+        );
+    )
+
+end Example
+
+class Other
+
+    instance variables
+
+    var_int: int;
+    var_real:real;
+
+    operations
+
+    public setReal: real ==> ()
+    setReal(a) == (
+        var_real:=a;
+    );
+
+end Other

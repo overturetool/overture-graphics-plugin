@@ -16,8 +16,8 @@ let tempo = new TempoApp(app, process.platform);
 global.App = tempo;
 
 // Definitions needed for menu construction
-var defaultMenu = require('./menu/menuTemplate')
-var Menu = require('menu')
+var defaultMenu = require('./menu/menuTemplate');
+var Menu = require('menu');
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -32,25 +32,12 @@ function createWindow() {
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   tempo.setWindow(mainWindow);
 
   // Get template for default menu 
   var menu = defaultMenu;
   let mw = mainWindow;
-
-  // Add custom menu 
-  menu.splice(0, 0, {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Add plot',
-        click: function (item, focusedWindow) {
-          dialog.showErrorBox("YOYOYO", "ADDED PLOT");
-        }
-      }
-    ]
-  })
 
   // Set top-level application menu, using modified template 
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu));

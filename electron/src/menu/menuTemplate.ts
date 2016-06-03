@@ -64,5 +64,53 @@ module.exports = [
                 }
             },
         ]
+    },
+    {
+        label: 'Window',
+        role: 'window',
+        submenu: [
+            {
+                label: 'Minimize',
+                accelerator: 'CmdOrCtrl+M',
+                role: 'minimize'
+            },
+            {
+                label: 'Close',
+                accelerator: 'CmdOrCtrl+W',
+                role: 'close'
+            },
+        ]
     }
 ];
+
+if (process.platform === 'darwin') {
+    const app = require('electron').app;
+    const name = app.getName();
+    module.exports.unshift({
+        label: name,
+        submenu: [
+            {
+                label: 'Hide ' + name,
+                accelerator: 'Command+H',
+                role: 'hide'
+            },
+            {
+                label: 'Hide Others',
+                accelerator: 'Command+Alt+H',
+                role: 'hideothers'
+            },
+            {
+                label: 'Show All',
+                role: 'unhide'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Quit',
+                accelerator: 'Command+Q',
+                click() { app.quit(); }
+            },
+        ]
+    });
+}
