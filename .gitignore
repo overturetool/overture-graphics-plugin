@@ -1,1 +1,44 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# node-waf configuration
+.lock-wscript
+
+# Dependency directories
+node_modules
+jspm_packages
+
+# Build folder
+dist/
+
+# Vim auxiliary files
+.*.un~
+.*.swp
+.*.swo
+*~
+
+bower_components/
+typings/
+.vscode/
+
+
+
+test-create
+demo-project
+test-sim
+test-vdmsim
+
+
+pkg/
+.DS_Store*
+
+
+
 .idea/

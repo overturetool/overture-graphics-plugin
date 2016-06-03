@@ -28,7 +28,10 @@ var gulp = require('gulp'),
     debug = require('gulp-debug'),
     typings = require('gulp-typings'),
     bower = require('gulp-bower'),
-    merge = require('merge-stream');
+    merge = require('merge-stream'),
+    electron = require('gulp-electron'),
+    packager = require('electron-packager'),
+    packageJSON = require('./package.json');
 
 // Tasks
 
@@ -46,7 +49,7 @@ gulp.task('install-bower-components', function () {
 // Clean everything!
 gulp.task("clean", function () {
     return del([
-    outputPath
+        outputPath
     ]);
 });
 
@@ -108,6 +111,72 @@ gulp.task('init', ['install-ts-defs', 'install-bower-components']);
 //Build App
 gulp.task('build', ['compile-ts', 'copy-js', 'copy-html', 'copy-css', 'copy-bower', 'copy-fonts']);
 
+
+// Package app binaries
+gulp.task("package-darwin", function (callback) {
+    var options = {
+        dir: '.',
+        name: packageJSON.name,
+        platform: "darwin",
+        arch: "x64",
+        version: "0.36.0",
+        overwrite: true,
+        out: 'pkg',
+        "app-version": packageJSON.version,
+        "version-string": {
+            "CompanyName": packageJSON.author.name,
+            "ProductName": packageJSON.productName
+        }
+    };
+    packager(options, function done(err, appPath) {
+        if (err) { return console.log(err); }
+        callback();
+    });
+});
+
+gulp.task("package-win32", function (callback) {
+    var options = {
+        dir: '.',
+        name: packageJSON.name,
+        platform: "win32",
+        arch: "all",
+        version: "0.36.0",
+        overwrite: true,
+        out: 'pkg',
+        "app-version": packageJSON.version,
+        "version-string": {
+            "CompanyName": packageJSON.author.name,
+            "ProductName": packageJSON.productName
+        }
+    };
+    packager(options, function done(err, appPath) {
+        if (err) { return console.log(err); }
+        callback();
+    });
+});
+
+gulp.task("package-linux", function (callback) {
+    var options = {
+        dir: '.',
+        name: packageJSON.name,
+        platform: "linux",
+        arch: "x64",
+        version: "0.36.0",
+        overwrite: true,
+        out: 'pkg',
+        "app-version": packageJSON.version,
+        "version-string": {
+            "CompanyName": packageJSON.author.name,
+            "ProductName": packageJSON.productName
+        }
+    };
+    packager(options, function done(err, appPath) {
+        if (err) { return console.log(err); }
+        callback();
+    });
+});
+
+gulp.task('package-all', ['package-win32', 'package-darwin', 'package-linux']);
 
 // Watch for changes and rebuild on the fly
 gulp.task('watch', function () {
