@@ -116,7 +116,10 @@ public class SessionVarListener implements ValueListener
 		String serialized = new Gson().toJson(msg);
 		try
 		{
-			session.getBasicRemote().sendText(serialized);
+			if (session.isOpen() && !session.getOpenSessions().isEmpty())
+			{
+				session.getBasicRemote().sendText(serialized);
+			}
 		} catch (IOException e)
 		{
 			e.printStackTrace();
