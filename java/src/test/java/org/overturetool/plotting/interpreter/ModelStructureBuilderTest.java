@@ -25,6 +25,7 @@ public class ModelStructureBuilderTest
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
 
+				@SuppressWarnings("unused")
 				ModelStructure structure = builder.build();
 
 				interpreter.finish();

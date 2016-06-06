@@ -83,6 +83,7 @@ public class SubscriptionServiceTest
 		sem.acquire();
 
 		// Send subscription
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Message<Subscription> msg = new Message();
 		msg.type = Subscription.messageType;
 		msg.data = new Subscription();
