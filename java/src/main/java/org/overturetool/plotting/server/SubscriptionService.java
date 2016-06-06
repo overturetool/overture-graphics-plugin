@@ -82,7 +82,7 @@ public class SubscriptionService
 			wscontainer.addEndpoint(SubscriptionService.class);
 
 			server.start();
-			server.dump(System.err);
+//			server.dump(System.err);
 		} catch (Throwable t)
 		{
 			t.printStackTrace(System.err);
