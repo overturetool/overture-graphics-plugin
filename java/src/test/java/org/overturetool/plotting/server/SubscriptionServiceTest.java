@@ -3,6 +3,11 @@ package org.overturetool.plotting.server;
 import java.io.File;
 import java.util.concurrent.Semaphore;
 
+import javax.websocket.ClientEndpoint;
+import javax.websocket.Session;
+
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.overturetool.plotting.RunModel;
 import org.overturetool.plotting.client.SubscriptionClient;
@@ -15,11 +20,50 @@ import com.google.gson.Gson;
 
 public class SubscriptionServiceTest
 {
+	/**
+	 * Test version of the subscriptionclass which enabled the test script to wait for a message in a synchrony way.
+	 * 
+	 * @author kel
+	 */
+	@ClientEndpoint
+	private class SubscriptionClientSync extends SubscriptionClient
+	{
+
+		String lastMessageMatched = null;
+
+		@Override
+		public synchronized void onText(String message, Session session)
+		{
+			super.onText(message, session);
+			this.lastMessageMatched = message;
+			notify();
+		}
+
+		public String waitFor(String type) throws InterruptedException
+		{
+			while (lastMessageMatched == null
+					|| !lastMessageMatched.contains("\"type\":\"" + type + "\""))
+			{
+				synchronized (this)
+				{
+					wait();
+				}
+			}
+
+			return lastMessageMatched;
+		}
+	};
 
 	SubscriptionService svc;
-	SubscriptionClient client = new SubscriptionClient();
+	SubscriptionClientSync client;// new SubscriptionClient();
 	String dest = "ws://localhost:8080/subscription";
 	Gson gson = new Gson();
+
+	@Before
+	public void setup()
+	{
+		client = new SubscriptionClientSync();
+	}
 
 	@Test
 	public void testServerTempoRemoteCtrlRequest() throws Exception
@@ -54,7 +98,7 @@ public class SubscriptionServiceTest
 		client.sendMessage(serialized);
 
 		// Wait to receive message
-		Thread.sleep(1000);
+		Assert.assertTrue("The model was not started correctly", client.waitFor("MODEL").contains("\"rootClass\":\"Test3\""));
 	}
 
 	@Test
@@ -93,8 +137,6 @@ public class SubscriptionServiceTest
 		client.connect(dest);
 		client.sendMessage(serialized);
 
-		Thread.sleep(1000);
-
 		// Start model
 		Message<Request> rq = new Message<>();
 		rq.type = Request.messageType;
@@ -104,6 +146,7 @@ public class SubscriptionServiceTest
 		client.sendMessage(serialized);
 
 		// Wait to receive message
-		Thread.sleep(1000);
+		Assert.assertTrue("The model was not started correctly", client.waitFor("RESPONSE").contains("OK"));
+		Assert.assertTrue("Expected to recieve value = 5", client.waitFor("VALUE").contains("\"value\":\"5.0\""));
 	}
 }

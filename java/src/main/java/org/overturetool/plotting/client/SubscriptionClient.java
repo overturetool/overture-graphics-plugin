@@ -63,7 +63,7 @@ public class SubscriptionClient
 			DeploymentException, InterruptedException
 	{
 		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-		container.connectToServer(this, new URI(dest));
+		container.connectToServer((SubscriptionClient)this, new URI(dest));
 
 		this.getLatch().await();
 	}
