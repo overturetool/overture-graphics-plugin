@@ -1,9 +1,18 @@
 package org.overturetool.plotting.interpreter;
 
-import com.google.gson.Gson;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
+import javax.websocket.Session;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.types.*;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.Value;
@@ -12,11 +21,7 @@ import org.overture.interpreter.values.ValueListener;
 import org.overturetool.plotting.protocol.Message;
 import org.overturetool.plotting.protocol.UpdateValue;
 
-import javax.websocket.Session;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import com.google.gson.Gson;
 
 public class SessionVarListener implements ValueListener
 {
@@ -36,8 +41,10 @@ public class SessionVarListener implements ValueListener
 	public void changedValue(ILexLocation loc, Value val, Context ctxt)
 			throws AnalysisException
 	{
-		if(!session.isOpen())
+		if (!session.isOpen())
+		{
 			return;
+		}
 
 		// Initialize message
 		Message<UpdateValue> msg = new Message<>();
@@ -49,34 +56,41 @@ public class SessionVarListener implements ValueListener
 		// Extract value from VDM Value
 		try
 		{
-			if (isType(val, ctxt, AIntNumericBasicType.class)) {
+			if (isType(val, ctxt, AIntNumericBasicType.class))
+			{
 				msg.data.value = gson.toJson(val.intValue(ctxt));
 			}
 
-			if (isType(val, ctxt, ARealNumericBasicType.class)) {
+			if (isType(val, ctxt, ARealNumericBasicType.class))
+			{
 				msg.data.value = gson.toJson(val.realValue(ctxt));
 			}
 
-			if (isType(val, ctxt, ABooleanBasicType.class)) {
+			if (isType(val, ctxt, ABooleanBasicType.class))
+			{
 				msg.data.value = gson.toJson(val.boolValue(ctxt));
 			}
 
-			if (isSeqOf(val, ctxt, AIntNumericBasicType.class)) {
+			if (isSeqOf(val, ctxt, AIntNumericBasicType.class))
+			{
 				ValueList list = val.seqValue(ctxt);
-				msg.data.value = getSeqValue(list,ctxt);
+				msg.data.value = getSeqValue(list, ctxt);
 			}
 
-			if (isSeqOf(val, ctxt, ARealNumericBasicType.class)) {
+			if (isSeqOf(val, ctxt, ARealNumericBasicType.class))
+			{
 				ValueList list = val.seqValue(ctxt);
-				msg.data.value = getSeqValue(list,ctxt);
+				msg.data.value = getSeqValue(list, ctxt);
 			}
 
-			if (isSeqOf(val, ctxt, ABooleanBasicType.class)) {
+			if (isSeqOf(val, ctxt, ABooleanBasicType.class))
+			{
 				ValueList list = val.seqValue(ctxt);
-				msg.data.value = getSeqValue(list,ctxt);
+				msg.data.value = getSeqValue(list, ctxt);
 			}
 
-			if (isString(val, ctxt)) {
+			if (isString(val, ctxt))
+			{
 				msg.data.value = gson.toJson(val.stringValue(ctxt));
 			}
 
@@ -100,9 +114,11 @@ public class SessionVarListener implements ValueListener
 
 		// Send message
 		String serialized = new Gson().toJson(msg);
-		try {
+		try
+		{
 			session.getBasicRemote().sendText(serialized);
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -114,50 +130,66 @@ public class SessionVarListener implements ValueListener
 		return isSeqOf(val, ctxt, ACharBasicType.class);
 	}
 
-	private boolean isSeqOf(Value val, Context ctxt, Class<? extends PType> t) {
+	private boolean isSeqOf(Value val, Context ctxt, Class<? extends PType> t)
+	{
 		return ctxt.assistantFactory.createPTypeAssistant().isSeq(type) // is Seq
-				&& ctxt.assistantFactory.createPTypeAssistant().isType(ctxt.assistantFactory.createPTypeAssistant()
-				.getSeq(type).getSeqof(), t); // of type t
+				&& ctxt.assistantFactory.createPTypeAssistant().isType(ctxt.assistantFactory.createPTypeAssistant().getSeq(type).getSeqof(), t); // of
+																																					// type
+																																					// t
 	}
 
-	private boolean isType(Value val, Context ctxt, Class<? extends PType> t) {
+	private boolean isType(Value val, Context ctxt, Class<? extends PType> t)
+	{
 		return ctxt.assistantFactory.createPTypeAssistant().isType(type, t);
 	}
 
-	private String getSeqValue(ValueList list, Context ctxt) throws ValueException {
+	private String getSeqValue(ValueList list, Context ctxt)
+			throws ValueException
+	{
 		Value first = list.get(0);
-		if(first == null)
+		if (first == null)
+		{
 			return null;
+		}
 
-		switch (getPrimitive(first,ctxt)) {
-			case AIntNumericBasicType: {
+		switch (getPrimitive(first, ctxt))
+		{
+			case AIntNumericBasicType:
+			{
 				ArrayList<Long> res = new ArrayList<>();
 
-				for (Value v : list) {
+				for (Value v : list)
+				{
 					res.add(v.intValue(ctxt));
 				}
 				return gson.toJson(res);
 			}
-			case ARealNumericBasicType: {
+			case ARealNumericBasicType:
+			{
 				ArrayList<Double> res = new ArrayList<>();
 
-				for (Value v : list) {
+				for (Value v : list)
+				{
 					res.add(v.realValue(ctxt));
 				}
 				return gson.toJson(res);
 			}
-			case ABooleanBasicType: {
+			case ABooleanBasicType:
+			{
 				ArrayList<Boolean> res = new ArrayList<>();
 
-				for (Value v : list) {
+				for (Value v : list)
+				{
 					res.add(v.boolValue(ctxt));
 				}
 				return gson.toJson(res);
 			}
-			case ACharBasicType: {
+			case ACharBasicType:
+			{
 				ArrayList<String> res = new ArrayList<>();
 
-				for (Value v : list) {
+				for (Value v : list)
+				{
 					res.add(v.stringValue(ctxt));
 				}
 				return gson.toJson(res);
@@ -166,26 +198,35 @@ public class SessionVarListener implements ValueListener
 		return null;
 	}
 
-	private Primitive getPrimitive(Value val, Context ctxt) {
-		if(val != null) {
-			if (isType(val, ctxt, AIntNumericBasicType.class)) {
+	private Primitive getPrimitive(Value val, Context ctxt)
+	{
+		if (val != null)
+		{
+			if (isType(val, ctxt, AIntNumericBasicType.class))
+			{
 				return Primitive.AIntNumericBasicType;
 			}
 
-			if (isType(val, ctxt, ARealNumericBasicType.class)) {
+			if (isType(val, ctxt, ARealNumericBasicType.class))
+			{
 				return Primitive.ARealNumericBasicType;
 			}
 
-			if (isType(val, ctxt, ABooleanBasicType.class)) {
+			if (isType(val, ctxt, ABooleanBasicType.class))
+			{
 				return Primitive.ABooleanBasicType;
 			}
 
-			if (isType(val, ctxt, ACharBasicType.class)) {
+			if (isType(val, ctxt, ACharBasicType.class))
+			{
 				return Primitive.ACharBasicType;
 			}
 		}
 		return null;
 	}
 
-	enum Primitive {AIntNumericBasicType, ARealNumericBasicType, ABooleanBasicType, ACharBasicType}
+	enum Primitive
+	{
+		AIntNumericBasicType, ARealNumericBasicType, ABooleanBasicType, ACharBasicType
+	}
 }
