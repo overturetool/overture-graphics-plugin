@@ -1,0 +1,49 @@
+class NestedTest
+
+    instance variables
+    
+    keepRunning:bool := true;
+
+    var_real:real;
+    nestedObject:TestNested := new TestNested();
+
+    operations
+
+    public run: ()==>()
+    run()== (
+     var_real:=0;
+     nestedObject.r1:=0;
+    
+   for all v in set {1,...,10} do
+ (
+     var_real:=var_real+1;
+     nestedObject.r1:=nestedObject.r1+1;
+     skip;
+     IO`println("updated");
+    );
+    );
+    
+
+  
+
+
+end NestedTest
+
+class TestNested
+
+    instance variables
+
+ public   r1:real;
+
+end TestNested
+
+
+class IO
+
+operations
+public static println:seq of ? ==>()
+println(l)==is not yet specified;
+
+end IO
+
+
