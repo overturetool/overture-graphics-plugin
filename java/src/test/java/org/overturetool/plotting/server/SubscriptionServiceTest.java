@@ -9,6 +9,7 @@ import javax.websocket.Session;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.overturetool.plotting.MessageUtil;
 import org.overturetool.plotting.RunModel;
 import org.overturetool.plotting.client.SubscriptionClient;
 import org.overturetool.plotting.interpreter.TempoRemoteControl;
@@ -73,7 +74,7 @@ public class SubscriptionServiceTest
 	SubscriptionService svc;
 	SubscriptionClientSync client;// new SubscriptionClient();
 	String dest = "ws://localhost:8080/subscription";
-	static Gson gson = new Gson();
+	
 
 	@Before
 	public void setup()
@@ -106,16 +107,14 @@ public class SubscriptionServiceTest
 		sem.acquire();
 
 		// Send request
-		Message<Request> msg = new Message<Request>();
-		msg.data = new Request("GetModelInfo");
-		msg.type = Request.messageType;
-		String serialized = gson.toJson(msg);
+		
 
 		client.connect(dest);
-		client.sendMessage(serialized);
+		client.sendMessage(MessageUtil.buildGetModelInfo());
 
 		// Wait to receive message
 		Assert.assertTrue("The model was not started correctly", client.waitFor("MODEL").contains("\"rootClass\":\"Test3\""));
+		remote.stop();
 	}
 
 	@Test
@@ -145,35 +144,18 @@ public class SubscriptionServiceTest
 
 		client.connect(dest);
 		// Send subscription
-		client.sendMessage(buildSubscribeMessage("var_real"));
+		client.sendMessage(MessageUtil.buildSubscribeMessage("var_real"));
 
 		// Start model
-		client.sendMessage(buildRunModelMessage());
+		client.sendMessage(MessageUtil.buildRunModelMessage());
 
 		// Wait to receive message
 		Assert.assertTrue("The model was not started correctly", client.waitFor("RESPONSE").contains("OK"));
 		Assert.assertTrue("Expected to recieve value = 5", client.waitFor("VALUE").contains("\"value\":\"5.0\""));
+		remote.stop();
 	}
 
-	private static String buildSubscribeMessage(String name)
-	{
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		Message<Subscription> msg = new Message();
-		msg.type = Subscription.messageType;
-		msg.data = new Subscription();
-		msg.data.variableName = "nestedObject.r1";
-		String serialized = gson.toJson(msg);
-		return serialized;
-	}
-
-	private static String buildRunModelMessage()
-	{
-		Message<Request> rq = new Message<>();
-		rq.type = Request.messageType;
-		rq.data = new Request();
-		rq.data.request = Request.RUN_MODEL;
-		return gson.toJson(rq);
-	}
+	
 
 	@Test
 	public void testServerTempoRemoteNestedTest() throws Exception
@@ -202,10 +184,10 @@ public class SubscriptionServiceTest
 
 		client.connect(dest);
 		// Send subscription
-		client.sendMessage(buildSubscribeMessage("nestedObject.r1"));
+		client.sendMessage(MessageUtil.buildSubscribeMessage("nestedObject.r1"));
 
 		// Start model
-		client.sendMessage(buildRunModelMessage());
+		client.sendMessage(MessageUtil.buildRunModelMessage());
 		// Wait to receive message
 		Assert.assertTrue("The model was not started correctly", client.waitFor("RESPONSE").contains("OK"));
 
