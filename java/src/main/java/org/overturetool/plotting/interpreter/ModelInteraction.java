@@ -63,6 +63,7 @@ public class ModelInteraction
 					if (tokens[i].equals(p.getKey().getName()))
 					{
 						v = p.getValue();
+						break;
 					}
 				}
 			}
