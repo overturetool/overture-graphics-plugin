@@ -11,6 +11,8 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
@@ -70,7 +72,17 @@ public class SessionVarListener implements ValueListener
 			{
 				msg.data.value = gson.toJson(val.boolValue(ctxt));
 			}
+			
+			if (isType(val, ctxt, ANatNumericBasicType.class))
+			{
+				msg.data.value = gson.toJson(val.natValue(ctxt));
+			}
 
+			if (isType(val, ctxt, ANatOneNumericBasicType.class))
+			{
+				msg.data.value = gson.toJson(val.nat1Value(ctxt));
+			}
+			
 			if (isSeqOf(val, ctxt, AIntNumericBasicType.class))
 			{
 				ValueList list = val.seqValue(ctxt);
