@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
@@ -24,8 +25,8 @@ public class RunModel
 	{
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_PP;
-
-		File[] files = specRoot.listFiles((d, name) -> name.endsWith(".vdmpp"));
+		
+		File[] files = FileUtils.listFiles(specRoot, new String[]{"vdmpp"}, true).toArray(new File[0]);
 
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(Arrays.asList(files));
 
