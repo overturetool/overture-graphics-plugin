@@ -1,8 +1,6 @@
 package org.overturetool.plotting.interpreter;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -15,6 +13,7 @@ import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueListener;
+import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.protocol.ModelStructure;
 import org.overturetool.plotting.protocol.Node;
 
@@ -23,7 +22,8 @@ import org.overturetool.plotting.protocol.Node;
  */
 public class ModelInteraction
 {
-	private static final String ROOT_NAME = "root";
+	public static final String ROOT_VAR_NAME = "root";
+	private String rootClass;
 	private RemoteInterpreter interpreter;
 
 	public ModelInteraction(RemoteInterpreter interpreter)
@@ -41,7 +41,7 @@ public class ModelInteraction
 			throws Exception
 	{
 		// Get root class instance
-		Value v = interpreter.valueExecute(ROOT_NAME);
+		Value v = interpreter.valueExecute(ROOT_VAR_NAME);
 		NameValuePairMap members;
 
 		// Tokenize variable name
@@ -89,32 +89,70 @@ public class ModelInteraction
 	}
 
 	/**
-	 * Searches for root class (with run method) and returns its name.
+	 * Returns root class name
+	 * @return
+     */
+	public String getRootClassName() {
+		return rootClass;
+	}
+
+	/**
+	 * Searches for root class and returns it.
 	 * 
 	 * @return
 	 */
-	public String getRootClassName()
+	public SClassDefinition getRootClass()
 	{
-		String[] exclude = new String[] { "Test", "TestCase", "TestSuite",
-				"TestResult", "TestListener", "TestRunner" };
-
 		for (SClassDefinition cdef : ((ClassInterpreter) interpreter.getInterpreter()).getClasses())
 		{
-			for (PDefinition def : cdef.getDefinitions())
-			{
-				if (def instanceof AExplicitOperationDefinition)
-				{
-					if (def.getName().getName().toLowerCase().equals("run"))
-					{
-						if (!Arrays.asList(exclude).contains(cdef.getName().getName()))
-						{
-							return cdef.getName().getName();
-						}
-					}
-				}
+			if(cdef.getName().getName().toLowerCase().equals(rootClass.toLowerCase())) {
+				return cdef;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Searches returns all class names
+	 *
+	 * @return
+	 */
+	public List<String> getClassNames()
+	{
+		ArrayList<String> cls = new ArrayList<>();
+
+		for (SClassDefinition cdef : ((ClassInterpreter) interpreter.getInterpreter()).getClasses())
+		{
+			cls.add(cdef.getName().getName());
+		}
+
+		return cls;
+	}
+
+	/**
+	 * Gets operations of root class
+	 * @return
+     */
+	public List<String> getOperationNames() {
+		ArrayList<String> ops = new ArrayList<>();
+
+		for (PDefinition def : getRootClass().getDefinitions())
+		{
+			if (def instanceof AExplicitOperationDefinition)
+			{
+				ops.add(def.getName().getName());
+			}
+		}
+
+		return ops;
+	}
+
+	/**
+	 * Sets the root class name
+	 * @param rootClass
+     */
+	public void setRootClass(String rootClass) {
+		this.rootClass = rootClass;
 	}
 
 	/**
@@ -122,9 +160,10 @@ public class ModelInteraction
 	 * 
 	 * @return
 	 */
-	public ModelStructure getModelStructure()
-	{
+	public ModelStructure getModelStructure() throws RootClassException {
 		ModelStructureBuilder bld = new ModelStructureBuilder(interpreter);
+
+		bld.setRootClass(this.rootClass);
 
 		return bld.build();
 	}
@@ -139,6 +178,6 @@ public class ModelInteraction
 	 */
 	public Value start(String runExp) throws Exception
 	{
-		return interpreter.valueExecute(ROOT_NAME + "." + runExp);
+		return interpreter.valueExecute(ROOT_VAR_NAME + "." + runExp);
 	}
 }

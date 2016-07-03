@@ -15,7 +15,9 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.handlers.MessageHandler;
+import org.overturetool.plotting.protocol.Error;
 import org.overturetool.plotting.protocol.Message;
 
 import com.google.gson.Gson;
@@ -102,5 +104,23 @@ public class SubscriptionService
 	public void addMessageHandler(MessageHandler handler)
 	{
 		handlers.put(handler.getMessageTypeName(), handler);
+	}
+
+	public static void TryExecuteRespondWithError(Session session, ConsumerThrows<Session> consumer) throws IOException {
+		try {
+			consumer.accept(session);
+		} catch (Exception e) {
+			// If root class not found, respond with error
+			Message<Error> msg = new Message<>();
+			msg.data = new Error(e.getMessage());
+			msg.type = Error.messageType;
+
+			String serialized = new Gson().toJson(msg);
+			session.getBasicRemote().sendText(serialized);
+		}
+	}
+
+	public interface ConsumerThrows<T> {
+		void accept(T t) throws RootClassException, IOException;
 	}
 }
