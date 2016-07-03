@@ -11,6 +11,7 @@ import {Message} from "./Message";
 import {Request} from "./Request";
 import {Subscription} from "./Subscription";
 import {UpdateValue} from "./UpdateValue";
+import {Response} from "./Response";
 
 export class SubscriptionClient {
     private wsClient: WebSocketClient;
@@ -18,7 +19,11 @@ export class SubscriptionClient {
     private onConnectCb: Function;
     private uri: string;
     private subscriptionMap = new Collections.Dictionary<string, Function>();
+    private responseQueue = new Collections.PriorityQueue<any>();
     private modelResponseQueue = new Collections.PriorityQueue<any>();
+    private classInfoQueue = new Collections.PriorityQueue<any>();
+    private functionInfoQueue =new Collections.PriorityQueue<any>();
+    private runMethod: string;
 
     constructor() {
         this.wsClient = new WebSocketClient();
@@ -78,7 +83,16 @@ export class SubscriptionClient {
             console.log("Received message: '" + msg.utf8Data + "'");
             var parsed = JSON.parse(msg.utf8Data);
 
-            if(parsed.type === ModelStructure.messageType) {
+            if(parsed.type === "RESPONSE") {
+                this.responseQueue.enqueue(parsed);
+            }
+            if(parsed.type === Response.functionInfo) {
+                this.functionInfoQueue.enqueue(parsed);
+            }
+            if(parsed.type === Response.classInfo) {
+                this.classInfoQueue.enqueue(parsed);
+            }
+            if(parsed.type === Response.modelInfo) {
                 this.modelResponseQueue.enqueue(parsed);
             }
             if(parsed.type === UpdateValue.messageType) {
@@ -94,6 +108,10 @@ export class SubscriptionClient {
             console.log(msg);
             this.wsConnection.sendUTF(msg);
         }
+    }
+
+    setRunFunction(fct: string) {
+        this.runMethod = fct;
     }
 
     async getModelInfo() : Promise<ModelStructure> {
@@ -119,11 +137,82 @@ export class SubscriptionClient {
         });
     }
 
+    async getClassInfo() : Promise<Array<string>> {
+        let msg = new Message<Request>();
+        msg.type = Request.messageType;
+        msg.data = new Request();
+        msg.data.request = Request.GET_CLASS_INFO;
+        var queue = this.classInfoQueue;
+
+        this.sendMessage(JSON.stringify(msg));
+
+        //noinspection TypeScriptValidateTypes
+        return new Promise<Array<string>>(resolve => {
+            var id = setInterval(intv, 100);
+
+            function intv() {
+                var model = queue.dequeue();
+                if (model !== undefined) {
+                    clearInterval(id);
+                    resolve(<Array<string>>model.data);
+                }
+            }
+        });
+    }
+
+    async getFunctionInfo() : Promise<Array<string>> {
+        let msg = new Message<Request>();
+        msg.type = Request.messageType;
+        msg.data = new Request();
+        msg.data.request = Request.GET_FUNCTION_INFO;
+        var queue = this.functionInfoQueue;
+
+        this.sendMessage(JSON.stringify(msg));
+
+        //noinspection TypeScriptValidateTypes
+        return new Promise<Array<string>>(resolve => {
+            var id = setInterval(intv, 100);
+
+            function intv() {
+                var model = queue.dequeue();
+                if (model !== undefined) {
+                    clearInterval(id);
+                    resolve(<Array<string>>model.data);
+                }
+            }
+        });
+    }
+
+    async setRootClass(rootClass: string) : Promise<string> {
+        let msg = new Message<Request>();
+        msg.type = Request.messageType;
+        msg.data = new Request();
+        msg.data.request = Request.SET_ROOT_CLASS;
+        msg.data.parameter = rootClass;
+        var queue = this.responseQueue;
+
+        this.sendMessage(JSON.stringify(msg));
+
+        //noinspection TypeScriptValidateTypes
+        return new Promise<string>(resolve => {
+            var id = setInterval(intv, 100);
+
+            function intv() {
+                var model = queue.dequeue();
+                if (model !== undefined) {
+                    clearInterval(id);
+                    resolve(<string>model.data);
+                }
+            }
+        });
+    }
+
     runModel() {
         let msg = new Message<Request>();
         msg.type = Request.messageType;
         msg.data = new Request();
         msg.data.request = Request.RUN_MODEL;
+        msg.data.parameter = this.runMethod;
 
         this.sendMessage(JSON.stringify(msg));
     }

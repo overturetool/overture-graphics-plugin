@@ -8,13 +8,11 @@ import javax.websocket.Session;
 
 import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.interpreter.ModelInteraction;
-import org.overturetool.plotting.protocol.Error;
-import org.overturetool.plotting.protocol.Message;
-import org.overturetool.plotting.protocol.ModelStructure;
-import org.overturetool.plotting.protocol.Request;
+import org.overturetool.plotting.protocol.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.overturetool.plotting.protocol.Error;
 import org.overturetool.plotting.server.SubscriptionService;
 
 /**
@@ -104,7 +102,7 @@ public class RequestHandler extends MessageHandler<Request>
 
 				Message<List<String>> msg = new Message<>();
 				msg.data = t;
-				msg.type = "RESPONSE";
+				msg.type = Response.functionInfo;
 
 				String serialized = new Gson().toJson(msg);
 
@@ -124,7 +122,7 @@ public class RequestHandler extends MessageHandler<Request>
 
 				Message<List<String>> msg = new Message<>();
 				msg.data = t;
-				msg.type = "RESPONSE";
+				msg.type = Response.classInfo;
 
 				String serialized = new Gson().toJson(msg);
 

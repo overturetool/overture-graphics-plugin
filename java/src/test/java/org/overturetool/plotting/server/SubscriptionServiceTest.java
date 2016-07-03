@@ -15,6 +15,7 @@ import org.overturetool.plotting.client.SubscriptionClient;
 import org.overturetool.plotting.interpreter.TempoRemoteControl;
 import org.overturetool.plotting.protocol.Message;
 import org.overturetool.plotting.protocol.Request;
+import org.overturetool.plotting.protocol.Response;
 import org.overturetool.plotting.protocol.Subscription;
 
 import com.google.gson.Gson;
@@ -153,7 +154,7 @@ public class SubscriptionServiceTest
 		client.sendMessage(MessageUtil.buildGetClasses());
 
 		// Wait to receive message
-		String classInfo = client.waitFor("RESPONSE");
+		String classInfo = client.waitFor(Response.classInfo);
 		Assert.assertTrue("Model does not contain Test3", classInfo.contains("Test3"));
 		Assert.assertTrue("Model does not contain Test2", classInfo.contains("Test2"));
 		Assert.assertTrue("Model does not contain Test1", classInfo.contains("Test1"));
@@ -197,7 +198,7 @@ public class SubscriptionServiceTest
 		client.sendMessage(MessageUtil.buildGetFunctions());
 
 		// Wait to receive message
-		String classInfo = client.waitFor("RESPONSE");
+		String classInfo = client.waitFor(Response.functionInfo);
 		Assert.assertTrue("Root class does not contain run", classInfo.contains("run"));
 		remote.stop();
 	}

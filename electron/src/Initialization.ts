@@ -5,6 +5,7 @@ import {PlotController} from "./plot/PlotController"
 import {AppMenuHandler} from "./AppMenuHandler"
 import {SubscriptionClient} from "./protocol/SubscriptionClient";
 import * as App from "./App";
+import {RootClassPickerController} from "./configuration/RootClassPickerController";
 
 // constants
 const mainViewId: string = "mainView";
@@ -15,8 +16,10 @@ export class InitializationController {
     browserCtrl: BrowserController;
     plotCtrl: PlotController;
     titleText: string;
+    private rootPickerCtrl: RootClassPickerController;
 
-    constructor(browserCtrl: BrowserController, plotCtrl: PlotController, title: string) {
+    constructor(browserCtrl: BrowserController, plotCtrl: PlotController, rootPickerCtrl: RootClassPickerController, title: string) {
+        this.rootPickerCtrl = rootPickerCtrl;
         this.titleText = title;
         this.browserCtrl = browserCtrl;
         this.plotCtrl = plotCtrl;
@@ -66,6 +69,11 @@ export class InitializationController {
     loadCreatePlotView() {
         this.layout.load("main","plot/CreatePlotView.html", "",
             () => this.plotCtrl.add2DPlotDidMount());
+    }
+
+    loadRootClassPickerView() {
+        this.layout.load("main","configuration/RootClassPickerView.html", "",
+            () => this.rootPickerCtrl.didMount());
     }
 
     getMainView() : HTMLDivElement {
