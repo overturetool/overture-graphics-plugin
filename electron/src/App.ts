@@ -6,7 +6,7 @@ const Path = require('path');
 
 export default class App {
     app: Electron.App;
-    platform : String
+    platform: String
     window: Electron.BrowserWindow;
 
     constructor(app: Electron.App, processPlatform: String) {

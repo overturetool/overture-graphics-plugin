@@ -53,6 +53,13 @@ public class SubscriptionHandler extends MessageHandler<Subscription>
 				try
 				{
 					modelInteraction.attachListener(n, new SessionVarListener(n.name, n.ptype, session));
+
+					Message<String> msg = new Message<>();
+					msg.type = "RESPONSE";
+					msg.data = "OK";
+					String serialized = new Gson().toJson(msg);
+
+					sess.getBasicRemote().sendText(serialized);
 				} catch (Exception e)
 				{
 					e.printStackTrace();

@@ -308,4 +308,32 @@ public class SubscriptionServiceTest
 		remote.stop();
 	}
 
+	@Test
+	public void startServer() throws Exception
+	{
+		// Initialize semaphore
+		Semaphore sem = new Semaphore(1);
+		sem.acquire();
+
+		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		Thread t = new Thread(() -> {
+			try
+			{
+				RunModel.runWithRemoteConsole(new File("src/test/resources/test-nested-real-run".replace('/', File.separatorChar)), remote);
+
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		t.setDaemon(true);
+		t.start();
+
+		// Wait for interpreter initialization
+		sem.acquire();
+		Thread.sleep(10000000);
+		remote.stop();
+	}
+
 }

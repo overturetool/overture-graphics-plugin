@@ -12,17 +12,18 @@ import {Request} from "./Request";
 import {Subscription} from "./Subscription";
 import {UpdateValue} from "./UpdateValue";
 import {Response} from "./Response";
+import {SubscriptionMap} from "./SubscriptionMap";
 
 export class SubscriptionClient {
     private wsClient: WebSocketClient;
     private wsConnection: connection;
     private onConnectCb: Function;
     private uri: string;
-    private subscriptionMap = new Collections.Dictionary<string, Function>();
+    private subscriptionMap = new SubscriptionMap();
     private responseQueue = new Collections.PriorityQueue<any>();
     private modelResponseQueue = new Collections.PriorityQueue<any>();
     private classInfoQueue = new Collections.PriorityQueue<any>();
-    private functionInfoQueue =new Collections.PriorityQueue<any>();
+    private functionInfoQueue = new Collections.PriorityQueue<any>();
     private runMethod: string;
 
     constructor() {
@@ -51,12 +52,12 @@ export class SubscriptionClient {
         conn.on('message', this.onMessage.bind(this));
 
         // Setup periodic ping
-        setInterval(() => {this.sendMessage("Ping")},10000);
+        setInterval(() => { this.sendMessage("Ping") }, 10000);
 
         if (conn.connected) {
             this.wsConnection = conn;
 
-            if(this.onConnectCb != null) {
+            if (this.onConnectCb != null) {
                 this.onConnectCb();
             }
         }
@@ -83,19 +84,19 @@ export class SubscriptionClient {
             console.log("Received message: '" + msg.utf8Data + "'");
             var parsed = JSON.parse(msg.utf8Data);
 
-            if(parsed.type === "RESPONSE") {
+            if (parsed.type === "RESPONSE") {
                 this.responseQueue.enqueue(parsed);
             }
-            if(parsed.type === Response.functionInfo) {
+            if (parsed.type === Response.functionInfo) {
                 this.functionInfoQueue.enqueue(parsed);
             }
-            if(parsed.type === Response.classInfo) {
+            if (parsed.type === Response.classInfo) {
                 this.classInfoQueue.enqueue(parsed);
             }
-            if(parsed.type === Response.modelInfo) {
+            if (parsed.type === Response.modelInfo) {
                 this.modelResponseQueue.enqueue(parsed);
             }
-            if(parsed.type === UpdateValue.messageType) {
+            if (parsed.type === UpdateValue.messageType) {
                 this.handleUpdateValue(
                     SerializationHelper
                         .toInstanceObj(new UpdateValue(), parsed.data));
@@ -104,7 +105,7 @@ export class SubscriptionClient {
     }
 
     sendMessage(msg: string) {
-        if(this.wsConnection != null && this.wsConnection.connected) {
+        if (this.wsConnection != null && this.wsConnection.connected) {
             console.log(msg);
             this.wsConnection.sendUTF(msg);
         }
@@ -114,7 +115,7 @@ export class SubscriptionClient {
         this.runMethod = fct;
     }
 
-    async getModelInfo() : Promise<ModelStructure> {
+    async getModelInfo(): Promise<ModelStructure> {
         let msg = new Message<Request>();
         msg.type = Request.messageType;
         msg.data = new Request();
@@ -137,7 +138,7 @@ export class SubscriptionClient {
         });
     }
 
-    async getClassInfo() : Promise<Array<string>> {
+    async getClassInfo(): Promise<Array<string>> {
         let msg = new Message<Request>();
         msg.type = Request.messageType;
         msg.data = new Request();
@@ -160,7 +161,7 @@ export class SubscriptionClient {
         });
     }
 
-    async getFunctionInfo() : Promise<Array<string>> {
+    async getFunctionInfo(): Promise<Array<string>> {
         let msg = new Message<Request>();
         msg.type = Request.messageType;
         msg.data = new Request();
@@ -183,7 +184,7 @@ export class SubscriptionClient {
         });
     }
 
-    async setRootClass(rootClass: string) : Promise<string> {
+    async setRootClass(rootClass: string): Promise<string> {
         let msg = new Message<Request>();
         msg.type = Request.messageType;
         msg.data = new Request();
@@ -217,21 +218,54 @@ export class SubscriptionClient {
         this.sendMessage(JSON.stringify(msg));
     }
 
-    subscribe(variable: string, callback: Function) {
-        let msg = new Message<Subscription>();
-        msg.type = Subscription.messageType;
-        msg.data = new Subscription();
-        msg.data.variableName = variable;
+    async subscribe(variable: string, subscriber: string, callback: Function) : Promise<string> {
+        var self = this;
 
-        this.sendMessage(JSON.stringify(msg));
-        this.subscriptionMap.setValue(variable, callback);
+        if(this.subscriptionMap.getSubscriptions(variable) === undefined) {
+            let msg = new Message<Subscription>();
+            msg.type = Subscription.messageType;
+            msg.data = new Subscription();
+            msg.data.variableName = variable;
+
+            this.sendMessage(JSON.stringify(msg));
+            var queue = this.responseQueue;
+
+            return new Promise<string>(resolve => {
+                var id = setInterval(intv, 100);
+
+                function intv() {
+                    var model = queue.dequeue();
+                    if (model !== undefined) {
+                        clearInterval(id);
+                        self.subscriptionMap.addSubscription(variable, subscriber, callback);
+                        resolve(<string>model.data);
+                    }
+                }
+            });
+        }
+
+        return new Promise<string>(resolve => {
+                var id = setInterval(intv, 100);
+
+                function intv() {
+                    clearInterval(id);
+                    self.subscriptionMap.addSubscription(variable, subscriber, callback);
+                    resolve("OK");
+                }
+            });
+    }
+
+    unsubscribe(variable: string, subscriber: string) {
+        this.subscriptionMap.removeSubscription(variable, subscriber);
     }
 
     handleUpdateValue(val: UpdateValue) {
-        let callback : Function = this.subscriptionMap.getValue(val.variableName);
+        let callbacks = this.subscriptionMap.getSubscriptions(val.variableName);
 
-        if(callback != null) {
-            callback(val);
+        if (callbacks !== undefined) {
+            for (let callback of callbacks.values()) {
+                callback(val);
+            }
         }
     }
 }

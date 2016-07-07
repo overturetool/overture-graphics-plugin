@@ -20,7 +20,7 @@ public class ModelStructureBuilder
 	private RemoteInterpreter interpreter;
 	private int levels = 0;
 	private boolean debug = false;
-	private ModelStructure model = null;
+	private static ModelStructure model = null;
 	private SClassDefinition rootClass = null;
 
 	public ModelStructureBuilder(RemoteInterpreter interpreter)

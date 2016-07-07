@@ -2,7 +2,7 @@ import {RootClassPickerController} from "./configuration/RootClassPickerControll
 'use strict';
 import {UpdateValue} from "./protocol/UpdateValue";
 import {ModelStructure} from "./protocol/ModelStructure";
-import {InitializationController} from "./Initialization";
+import {WindowController} from "./WindowController";
 import {AppMenuHandler} from "./AppMenuHandler";
 import {BrowserController} from "./plotBrowser/BrowserController";
 import {PlotController} from "./plot/PlotController";
@@ -16,40 +16,43 @@ async function main() {
     //let model : ModelStructure = await client.getModelInfo();
 
     // Initialise controllers
-    //let title = "TEMPO Plotting Tool ["+ model.rootClass +"]";
     let title = "TEMPO Plotting Tool [No root class]";
     let menuHandler: AppMenuHandler = new AppMenuHandler();
     let browserController: BrowserController = new BrowserController(menuHandler);
+    let windowCtrl = new WindowController(browserController, title);
     let plotController: PlotController = new PlotController(menuHandler, client, browserController);
-    let rootPickerCtrl: RootClassPickerController = new RootClassPickerController(client, menuHandler);
+    let rootPickerCtrl: RootClassPickerController = new RootClassPickerController(client, menuHandler, windowCtrl);
     let runPickerCtrl: RunFunctionPickerController = new RunFunctionPickerController(client, menuHandler);
-    let init = new InitializationController(browserController, plotController, rootPickerCtrl, title);
-    init.initialize();
-
+    windowCtrl.initialize();
 
     // Setup menu handlers
     menuHandler.openChartView = (id) => {
-        init.layout.load("main", "plot/ShowPlotView.html", "", () => {
-            plotController.show2DPlotByTitle(id);
+        windowCtrl.layout.load("main", "plot/ShowPlotView.html", "", () => {
+            plotController.showPlotById(id);
         });
     };
-    menuHandler.openAddPlotView = async () => {
-        await init.loadCreatePlotView();
+    menuHandler.openAddPlotView = () => {
+        windowCtrl.layout.load("main","plot/CreatePlotView.html", "",
+            () => plotController.addPlotDidMount());
     };
-    menuHandler.openRootClassPickerView = async () => {
-        await init.loadRootClassPickerView();
+    menuHandler.openRootClassPickerView = () => {
+        windowCtrl.layout.load("main","configuration/RootClassPickerView.html", "",
+            () => rootPickerCtrl.didMount());
     };
     menuHandler.openRunFunctionPickerView = () => {
-        init.layout.load("main", "configuration/RunFunctionPickerView.html", "", async () => {
+        windowCtrl.layout.load("main", "configuration/RunFunctionPickerView.html", "", async () => {
             await runPickerCtrl.didMount();
         });
     };
     menuHandler.runModel = () => {
         client.runModel()
     };
+    menuHandler.removePlot = (id: string) => {
+        plotController.removePlotById(id);
+    };
 
     // Set initial main view.
-    await init.loadRootClassPickerView();
+    menuHandler.openRootClassPickerView();
 }
 
 main();

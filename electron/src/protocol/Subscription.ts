@@ -3,6 +3,6 @@
  */
 
 export class Subscription {
-    static messageType : string  = "SUBSCRIBE";
-    variableName : string;
+    static messageType: string = "SUBSCRIBE";
+    variableName: string;
 }

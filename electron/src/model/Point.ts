@@ -1,5 +1,5 @@
 export class Point {
-    x: number;
-    y: number;
-    z: number;
+    x: number | number[];
+    y: number | number[];
+    z: number | number[];
 }

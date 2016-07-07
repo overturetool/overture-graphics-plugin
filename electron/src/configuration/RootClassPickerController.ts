@@ -1,16 +1,22 @@
 import {SubscriptionClient} from "../protocol/SubscriptionClient";
 import {Navigation} from "../Navigation";
+import {WindowController} from "../WindowController";
 
 export class RootClassPickerController {
     private navigation: Navigation;
     private client: SubscriptionClient;
     private form: W2UI.W2Form;
+    private windowCtrl: WindowController;
 
-    constructor(client: SubscriptionClient, navigation: Navigation) {
+    constructor(client: SubscriptionClient, navigation: Navigation, windowCtrl: WindowController) {
         this.client = client;
         this.navigation = navigation;
+        this.windowCtrl = windowCtrl;
     }
 
+    /**
+     * Called when the component is mounted
+     */
     async didMount() {
         if(this.form != null) {
             w2ui["rcPicker"].render($('#rcPicker')[0]);
@@ -33,14 +39,31 @@ export class RootClassPickerController {
                 },
                 save: async function () {
                     var className = this.record["field_list"].text;
-                    var response: string = await self.client.setRootClass(className);
+                    var result = await self.setRootClass(className, self);
 
-                    if(response === "OK") {
+                    if(result) {
                         this.clear();
-                        self.navigation.openRunFunctionPickerView();
                     }
                 }
             }
         });
+    }
+
+    /**
+     * Sets root class name
+     * @param className
+     * @param self
+     * @returns {boolean}
+     */
+    private async setRootClass(className: string, self: RootClassPickerController) : Promise<boolean> {
+        var response: string = await self.client.setRootClass(className);
+
+        if(response === "OK") {
+            self.windowCtrl.titleText = "TEMPO Plotting Tool [" + className + "]";
+            self.navigation.openRunFunctionPickerView();
+
+            return true;
+        }
+        return false;
     }
 }

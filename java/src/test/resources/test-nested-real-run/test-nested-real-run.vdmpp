@@ -17,7 +17,7 @@ class NestedTest
    for all v in set {1,...,10} do
  (
      var_real:=var_real+1;
-     nestedObject.r1:=nestedObject.r1+1;
+     nestedObject.r1:=nestedObject.r1+2;
      skip;
      IO`println("updated");
     );

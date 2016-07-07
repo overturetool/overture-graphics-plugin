@@ -25,6 +25,7 @@ public class ModelInteraction
 	public static final String ROOT_VAR_NAME = "root";
 	private String rootClass;
 	private RemoteInterpreter interpreter;
+	private Value rootClassValue = null;
 
 	public ModelInteraction(RemoteInterpreter interpreter)
 	{
@@ -41,7 +42,10 @@ public class ModelInteraction
 			throws Exception
 	{
 		// Get root class instance
-		Value v = interpreter.valueExecute(ROOT_VAR_NAME);
+		if(rootClassValue == null)
+			rootClassValue = interpreter.valueExecute(ROOT_VAR_NAME);
+
+		Value v = rootClassValue;
 		NameValuePairMap members;
 
 		// Tokenize variable name

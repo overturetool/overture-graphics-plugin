@@ -9,7 +9,6 @@ import {AppEvents} from "../AppEvents";
 import {AppMenuHandler} from "../AppMenuHandler";
 import * as App from "../App";
 
-
 export class BrowserController {
     private browser: HTMLDivElement;
     private toolbar: HTMLDivElement;
@@ -24,7 +23,7 @@ export class BrowserController {
     }
 
     initialize() {
-        let _this2 = this;
+        let self = this;
         this.browser = <HTMLDivElement>document.querySelector("#browser");
         this.toolbar = <HTMLDivElement>document.querySelector("#toolbar");
         let remote = require("remote");
@@ -32,62 +31,90 @@ export class BrowserController {
         // Setup sidebar with right click menu
         this.tree = $(this.browser).w2sidebar({
             name: 'sidebar',
-             menu: [
-                {id: "Add", text: "Add", icon: 'glyphicon glyphicon-add'},
-                {id: "Remove", text: "Remove", icon: 'glyphicon glyphicon-remove'},
-            ]
+            menu: [
+                { id: "Remove", text: "Remove", icon: 'glyphicon glyphicon-remove' },
+            ],
+            onMenuClick: (event: any) => {
+                let plot: string = event.target + "";
+                let menuItem: string = event.menuItem.id;
+
+                if (menuItem === "Remove") {
+                    self.menuHandler.removePlot(plot);
+                }
+            }
         });
 
         // Add double click handlers
         this.addDblClickHandler((event: JQueryEventObject) => {
             console.info(event);
-            let sender : string = event.target + "";
+            let sender: string = event.target + "";
 
-            if(sender != "2D" && sender != "3D")
-                _this2.menuHandler.openChartView(sender);
+            if (sender != "2D" && sender != "3D" && sender != "List")
+                self.menuHandler.openChartView(sender);
         });
-        
+
         // Setup tree
         this.initTreeParentNodes();
         this.addTreeClickHandlers();
 
         // Setup toolbar
+        this.setupToolbar();
+    }
+
+    private setupToolbar() {
+        let self = this;
+
+        // Setup toolbar
         let toolbar = $(this.toolbar).w2toolbar({
-            name : 'myToolbar',
+            name: 'myToolbar',
             items: [
-                { type: 'button',  id: 'runModel', caption: 'Run', icon: 'glyphicon glyphicon-play'},
-                { type: 'button',  id: 'addPlot', caption: 'Add', icon: 'glyphicon glyphicon-plus-sign'},
+                {
+                    type: 'button', id: 'addPlot', caption: 'New', icon: 'glyphicon glyphicon-file'
+                },
+                { 
+                    type: 'button', id: 'runModel', caption: 'Start', icon: 'glyphicon glyphicon-play'
+                },
             ]
         });
         toolbar.on('click', (event: JQueryEventObject) => {
-            let sender : string = event.target + "";
+            let sender: string = event.target + "";
 
-            if(sender == "runModel")
-                _this2.menuHandler.runModel();
-            if(sender == "addPlot")
-                _this2.menuHandler.openAddPlotView();
+            if (sender == "runModel")
+                self.menuHandler.runModel();
+            if (sender == "addPlot")
+                self.menuHandler.openAddPlotView();
         });
-    }
+    };
 
     private initTreeParentNodes() {
         this.addToplevelNodes([
             {
                 id: 'Plots', text: 'Plots', img: 'icon-folder', expanded: true, group: true,
-                nodes: [{
-                    id: '2D', text: '2D', icon: 'glyphicon glyphicon-folder-open',
-                    nodes: []
-                },
-                {
-                    id: '3D', text: '3D', icon: 'glyphicon glyphicon-folder-open',
-                    nodes: []
-                }
-            ]}
+                nodes: [
+                    {
+                        id: '2D', text: '2D', icon: 'glyphicon glyphicon-folder-open',
+                        nodes: []
+                    },
+                    {
+                        id: '3D', text: '3D', icon: 'glyphicon glyphicon-folder-open',
+                        nodes: []
+                    },
+                    {
+                        id: 'List', text: 'List', icon: 'glyphicon glyphicon-folder-open',
+                        nodes: []
+                    }
+                ]
+            }
         ]);
     }
 
-    addPlot(parent: string, title: string) {
-        let node: any = { id: title, text: title, icon: 'glyphicon glyphicon-stats' };
+    addPlot(parent: string, id: string, title: string) {
+        let node: any = { id: id, text: title, icon: 'glyphicon glyphicon-stats' };
         this.addNodes(parent, node);
+    }
+
+    removePlot(id: string) {
+        this.tree.remove(id);
     }
 
     addToplevelNodes(nodes: Object | Object[]): Object {
