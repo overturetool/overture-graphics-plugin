@@ -1,14 +1,17 @@
 import {SubscriptionClient} from "../protocol/SubscriptionClient";
 import {Navigation} from "../Navigation";
+import {Configuration} from "./Configuration";
 
 export class RunFunctionPickerController {
     private navigation: Navigation;
     private client: SubscriptionClient;
     private form: W2UI.W2Form;
+    private cfg: Configuration;
 
-    constructor(client: SubscriptionClient, navigation: Navigation) {
+    constructor(client: SubscriptionClient, navigation: Navigation, cfg: Configuration) {
         this.client = client;
         this.navigation = navigation;
+        this.cfg = cfg;
     }
 
     async didMount() {
@@ -34,11 +37,16 @@ export class RunFunctionPickerController {
                 },
                 save: async function () {
                     var fct = this.record["field_list"].text;
-                    self.client.setRunFunction(fct);
+                    self.setRunFunction(fct)
                     this.clear();
                     self.navigation.openAddPlotView();
                 }
             }
         });
+    }
+
+    setRunFunction(fct: string) {
+        this.client.setRunFunction(fct);
+        this.cfg.runFunction = fct;
     }
 }

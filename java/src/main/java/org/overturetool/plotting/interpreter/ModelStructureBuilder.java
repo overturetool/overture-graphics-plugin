@@ -46,7 +46,7 @@ public class ModelStructureBuilder
 	 */
 	public ModelStructure build() throws RootClassException {
 		// Only build model once
-		if (model == null)
+		if (model == null || !model.getRootClass().toLowerCase().equals(rootClass.getName().getName().toLowerCase()))
 		{
 			model = new ModelStructure();
 

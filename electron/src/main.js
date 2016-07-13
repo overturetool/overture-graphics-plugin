@@ -15,10 +15,9 @@ const BrowserWindow = electron.BrowserWindow;
 let tempo = new TempoApp(app, process.platform);
 global.App = tempo;
 
-// Definitions needed for menu construction
-var defaultMenu = require('./menu/menuTemplate');
+// Definitions needed for clearing menu
+var defaultMenu = [];//require('./menu/menuTemplate');
 var Menu = require('menu');
-
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

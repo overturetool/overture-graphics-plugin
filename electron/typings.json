@@ -5,6 +5,7 @@
     "description": "Tool for visualizing TEMPO model variables",
     "license": "MIT",
     "globalDependencies": {
+        "electron-json-storage": "registry:dt/electron-json-storage#0.0.0+20160324000215",
         "github-electron": "registry:dt/github-electron#0.37.4+20160412150407",
         "jquery": "registry:dt/jquery#2.0.0+20160303223636",
         "node": "registry:dt/node#4.0.0+20160412142033",

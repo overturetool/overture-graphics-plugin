@@ -5,6 +5,7 @@ import {SubscriptionClient} from "../protocol/SubscriptionClient";
 import * as Collections from 'typescript-collections';
 import {ModelStructure} from "../protocol/ModelStructure";
 import {BrowserController} from "../plotBrowser/BrowserController";
+import {Configuration} from "../configuration/Configuration";
 
 export class PlotController {
     private _plots = new Collections.Dictionary<string, Plot>();
@@ -13,11 +14,13 @@ export class PlotController {
     private _browserCtrl: BrowserController;
     private _form: W2UI.W2Form;
     private _grid: W2UI.W2Grid;
+    private _cfg: Configuration;
 
-    constructor(menuHandler: AppMenuHandler, subClient: SubscriptionClient, browserCtrl: BrowserController) {
+    constructor(menuHandler: AppMenuHandler, subClient: SubscriptionClient, browserCtrl: BrowserController, cfg: Configuration) {
         this._menuHandler = menuHandler;
         this._subClient = subClient;
         this._browserCtrl = browserCtrl;
+        this._cfg = cfg;
     }
 
     async addPlotDidMount() {
@@ -62,6 +65,7 @@ export class PlotController {
                     }
 
                     await self.createPlot(title, varNamesStripped, <PlotType>type);
+                    self._cfg.addPlot(title, varNamesStripped, <PlotType>type);
                     this.clear();
                 }
             }

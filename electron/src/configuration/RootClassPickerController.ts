@@ -1,17 +1,20 @@
 import {SubscriptionClient} from "../protocol/SubscriptionClient";
 import {Navigation} from "../Navigation";
 import {WindowController} from "../WindowController";
+import {Configuration} from "./Configuration";
 
 export class RootClassPickerController {
     private navigation: Navigation;
     private client: SubscriptionClient;
     private form: W2UI.W2Form;
     private windowCtrl: WindowController;
+    private cfg: Configuration;
 
-    constructor(client: SubscriptionClient, navigation: Navigation, windowCtrl: WindowController) {
+    constructor(client: SubscriptionClient, navigation: Navigation, windowCtrl: WindowController, cfg: Configuration) {
         this.client = client;
         this.navigation = navigation;
         this.windowCtrl = windowCtrl;
+        this.cfg = cfg;
     }
 
     /**
@@ -55,13 +58,13 @@ export class RootClassPickerController {
      * @param self
      * @returns {boolean}
      */
-    private async setRootClass(className: string, self: RootClassPickerController) : Promise<boolean> {
+    async setRootClass(className: string, self: RootClassPickerController) : Promise<boolean> {
         var response: string = await self.client.setRootClass(className);
 
         if(response === "OK") {
             self.windowCtrl.titleText = "TEMPO Plotting Tool [" + className + "]";
             self.navigation.openRunFunctionPickerView();
-
+            self.cfg.rootClass = className;
             return true;
         }
         return false;
