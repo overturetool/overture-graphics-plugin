@@ -308,7 +308,7 @@ public class SubscriptionServiceTest
 		remote.stop();
 	}
 
-	@Test
+	//@Test
 	public void startServer() throws Exception
 	{
 		// Initialize semaphore
