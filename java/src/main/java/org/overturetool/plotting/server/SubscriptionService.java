@@ -121,6 +121,6 @@ public class SubscriptionService
 	}
 
 	public interface ConsumerThrows<T> {
-		void accept(T t) throws RootClassException, IOException;
+		void accept(T t) throws Exception;
 	}
 }

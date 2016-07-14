@@ -24,6 +24,7 @@ public class ModelStructureBuilderTest
 			public void run(RemoteInterpreter interpreter) throws Exception
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
+				builder.setRootClass("Test3");
 
 				@SuppressWarnings("unused")
 				ModelStructure structure = builder.build();
@@ -42,6 +43,7 @@ public class ModelStructureBuilderTest
 			public void run(RemoteInterpreter interpreter) throws Exception
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
+				builder.setRootClass("Test3");
 
 				ModelStructure structure = builder.build();
 
@@ -61,6 +63,7 @@ public class ModelStructureBuilderTest
 			public void run(RemoteInterpreter interpreter) throws Exception
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
+				builder.setRootClass("Test3");
 
 				ModelStructure structure = builder.build();
 
@@ -81,6 +84,7 @@ public class ModelStructureBuilderTest
 			public void run(RemoteInterpreter interpreter) throws Exception
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
+				builder.setRootClass("Test1");
 
 				ModelStructure actual = builder.build();
 
@@ -107,6 +111,7 @@ public class ModelStructureBuilderTest
 			public void run(RemoteInterpreter interpreter) throws Exception
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
+				builder.setRootClass("Test2");
 
 				ModelStructure actual = builder.build();
 
@@ -138,6 +143,7 @@ public class ModelStructureBuilderTest
 			public void run(RemoteInterpreter interpreter) throws Exception
 			{
 				ModelStructureBuilder builder = new ModelStructureBuilder(interpreter);
+				builder.setRootClass("Test3");
 
 				ModelStructure actual = builder.build();
 

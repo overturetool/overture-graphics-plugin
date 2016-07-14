@@ -44,9 +44,7 @@ public class SubscriptionHandler extends MessageHandler<Subscription>
 				// Could not find node
 				if (n == null)
 				{
-					//FIXME, report an error on the subscription
-					System.err.println("Unable to find node for: "+message.variableName);
-					return;
+					throw new Exception("Could not find variable with that name.");
 				}
 
 				// Else attach listener
