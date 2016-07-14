@@ -184,14 +184,17 @@ export class PlotController {
             title: plot.title,
             showlegend: true,
             autosize: true,
+            autosizable: true,
             width: 1050,
             height: 750,
-            scene: {
-                xaxis: { title: 'Time' },
-                yaxis: { title: 'Value' }
-            }
+            xaxis: { title: 'Time' },
+            yaxis: { title: 'Value' }
         };
-        Plotly.newPlot('plot', traces, layout, { showLink: false });
+        Plotly.newPlot('plot', traces, layout, {
+            showLink: false,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['sendDataToCloud', 'hoverCompareCartesian']
+        });
         plot.shown = true;
     }
 
@@ -208,15 +211,38 @@ export class PlotController {
             title: plot.title,
             showlegend: true,
             autosize: true,
+            autosizable: true,
             width: 1050,
             height: 750,
             scene: {
-                xaxis: { title: 'Edge #' },
+                xaxis: { title: 'Variable #' },
                 yaxis: { title: 'Time' },
-                zaxis: { title: 'Value' }
+                zaxis: { title: 'Value' },
+                dragmode: 'turntable',
+                camera: {
+                    eye: {
+                        x: traces.length + 0.25,
+                        y: -1,
+                        z: 1.25
+                    },
+                    up: {
+                        x: 0,
+                        y: 0,
+                        z: 1
+                    },
+                    center: {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    }
+                }
             }
         };
-        Plotly.newPlot('plot', traces, layout, { showLink: false });
+        Plotly.newPlot('plot', traces, layout, {
+            showLink: false,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['sendDataToCloud', 'hoverCompareCartesian']
+        });
         plot.shown = true;
     }
 

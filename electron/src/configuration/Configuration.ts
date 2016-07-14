@@ -99,7 +99,7 @@ export class Configuration {
             }
 
             // Filter: Only look at saved configurations
-            var keysFiltered = keys.filter(self.isSaveKeyRootClass);
+            var keysFiltered = keys.filter(self.isKeyRootClass);
 
             // Create rootclass submenu
             var rootClasses = keysFiltered.map((key) => {
@@ -174,7 +174,7 @@ export class Configuration {
         return rootClass.replace(Configuration.SAVE_KEY_PREFIX, "");
     }
 
-    private isSaveKeyRootClass(saveKey: string): boolean {
+    private isKeyRootClass(saveKey: string): boolean {
         return saveKey.substr(0, 6) === Configuration.SAVE_KEY_PREFIX;
     }
 }
