@@ -27,3 +27,10 @@ mvn -Dmaven.repo.local=repository release:prepare -DreleaseVersion=${RELEASE_VER
 git push --follow-tags
 mvn -Dmaven.repo.local=repository release:perform
 ```
+
+### Releasing the Electron module
+
+```bash
+gulp build
+gulp package-all
+```
