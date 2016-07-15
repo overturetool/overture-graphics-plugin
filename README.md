@@ -6,7 +6,7 @@
 2. `npm install -g typings`
 3. `npm install -g gulp`
 4. `gulp init`
-4. `typings install`
+5. `typings install`
 
 ##### Run
 1. `gulp`
