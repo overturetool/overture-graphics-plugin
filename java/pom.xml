@@ -4,7 +4,7 @@
 
   <groupId>org.overture</groupId>
   <artifactId>overture-plotting-tool</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.6</version>
 
   <properties>
     <jetty.version>9.2.11.v20150529</jetty.version>
@@ -187,7 +187,7 @@
 		<url>git@github.com:overturetool/tempo-plotting-tool.git</url>
 		<connection>scm:git:git://github.com/overturetool/tempo-plotting-tool.git</connection>
 		<developerConnection>scm:git:git@github.com:overturetool/tempo-plotting-tool.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Release/1.0.6</tag>
 	</scm>
 
 	<developers>
