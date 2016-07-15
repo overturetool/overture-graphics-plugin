@@ -3,7 +3,10 @@
 ### Electron 
 ##### Initialize
 1. `npm install`
-2. `gulp init`
+2. `npm install -g typings`
+3. `npm install -g gulp`
+4. `gulp init`
+4. `typings install`
 
 ##### Run
 1. `gulp`
