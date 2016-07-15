@@ -10,5 +10,4 @@ export class Guid {
 // Example of a bunch of GUIDs
 for (var i = 0; i < 100; i++) {
     var id = Guid.newGuid();
-    console.log(id);
 }

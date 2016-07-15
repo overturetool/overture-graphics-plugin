@@ -8,6 +8,7 @@ import javax.websocket.Session;
 
 import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.interpreter.ModelInteraction;
+import org.overturetool.plotting.interpreter.TempoRemoteControl;
 import org.overturetool.plotting.protocol.*;
 
 import com.google.gson.Gson;
@@ -21,11 +22,13 @@ import org.overturetool.plotting.server.SubscriptionService;
 public class RequestHandler extends MessageHandler<Request>
 {
 	private ModelInteraction modelInteraction;
+	private TempoRemoteControl remoteControl;
 
-	public RequestHandler(ModelInteraction modelInteraction)
+	public RequestHandler(ModelInteraction modelInteraction, TempoRemoteControl remoteControl)
 	{
 
 		this.modelInteraction = modelInteraction;
+		this.remoteControl = remoteControl;
 	}
 
 	@Override
@@ -54,6 +57,11 @@ public class RequestHandler extends MessageHandler<Request>
 		if (message.request.equals(Request.GET_FUNCTION_INFO))
 		{
 			HandleGetFunctionInfo(session);
+		}
+
+		if (message.request.equals(Request.STOP_SERVER))
+		{
+			HandleStop(session);
 		}
 	}
 
@@ -171,6 +179,15 @@ public class RequestHandler extends MessageHandler<Request>
 				sess.getBasicRemote().sendText(serialized);
 			});
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void HandleStop(Session session) {
+		try {
+			session.close();
+			remoteControl.stop();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -8,6 +8,7 @@ export class Request {
     static GET_CLASS_INFO: string = "GetClassInfo";
     static GET_FUNCTION_INFO: string = "GetFunctionInfo";
     static SET_ROOT_CLASS: string = "SetRootClass";
+    static STOP_SERVER: string = "StopServer";
     request: string ;
     parameter: string ;
 }

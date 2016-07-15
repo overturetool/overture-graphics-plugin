@@ -1,5 +1,5 @@
-import {RootClassPickerController} from "./configuration/RootClassPickerController";
 'use strict';
+import {RootClassPickerController} from "./configuration/RootClassPickerController";
 import {UpdateValue} from "./protocol/UpdateValue";
 import {ModelStructure} from "./protocol/ModelStructure";
 import {WindowController} from "./WindowController";
@@ -9,6 +9,7 @@ import {PlotController} from "./plot/PlotController";
 import {SubscriptionClient} from "./protocol/SubscriptionClient";
 import {RunFunctionPickerController} from "./configuration/RunFunctionPickerController";
 import {Configuration} from "./configuration/Configuration";
+import * as electron from "electron";
 
 async function main() {
     // Start WebSocket client
@@ -67,6 +68,11 @@ async function main() {
 
     // Set initial main view.
     menuHandler.openRootClassPickerView();
+
+    // On quit, send stop request to websocket server
+    window.onbeforeunload = (e: Event) => { 
+        client.stop();
+    }
 }
 
 main();

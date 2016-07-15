@@ -8,6 +8,7 @@ public class Request
 	public static final String GET_CLASS_INFO = "GetClassInfo";
 	public static final String GET_FUNCTION_INFO = "GetFunctionInfo";
 	public static final String SET_ROOT_CLASS = "SetRootClass";
+	public static final String STOP_SERVER = "StopServer";
 	public String request;
 	public String parameter;
 

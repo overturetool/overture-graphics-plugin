@@ -268,4 +268,13 @@ export class SubscriptionClient {
             }
         }
     }
+
+    stop() {
+        let msg = new Message<Request>();
+        msg.type = Request.messageType;
+        msg.data = new Request();
+        msg.data.request = Request.STOP_SERVER;
+
+        this.sendMessage(JSON.stringify(msg));
+    }
 }

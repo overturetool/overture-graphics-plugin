@@ -81,12 +81,13 @@ public class TempoRemoteControl implements RemoteControl
 	 */
 	private void setupServer()
 	{
-		// Setup handlers
-		RequestHandler rqHandler = new RequestHandler(modelInteraction);
-		SubscriptionHandler subscriptionHandler = new SubscriptionHandler(modelInteraction);
-
 		// Create and start server
 		this.subSvc = new SubscriptionService();
+
+		// Setup handlers
+		RequestHandler rqHandler = new RequestHandler(modelInteraction, this);
+		SubscriptionHandler subscriptionHandler = new SubscriptionHandler(modelInteraction);
+
 		this.subSvc.addMessageHandler(rqHandler);
 		this.subSvc.addMessageHandler(subscriptionHandler);
 		this.subSvc.startServer(8080);
