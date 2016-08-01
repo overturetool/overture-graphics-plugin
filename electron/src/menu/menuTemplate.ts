@@ -47,7 +47,7 @@ export var menuTemplate : any = [
 
 if (process.platform === 'darwin') {
     const app = require('electron').app;
-    const name = app.getName();
+    const name = "TEMPO Plotting Tool";
     menuTemplate.unshift({
         label: name,
         submenu: [
