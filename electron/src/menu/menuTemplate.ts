@@ -1,3 +1,5 @@
+require('pkginfo')(module);
+
 export var menuTemplate : any = [
     {
         label: 'View',
@@ -46,8 +48,7 @@ export var menuTemplate : any = [
 ];
 
 if (process.platform === 'darwin') {
-    const app = require('electron').app;
-    const name = "TEMPO Plotting Tool";
+    const name = module.exports.productName;
     menuTemplate.unshift({
         label: name,
         submenu: [
@@ -71,7 +72,7 @@ if (process.platform === 'darwin') {
             {
                 label: 'Quit',
                 accelerator: 'Command+Q',
-                click() { app.quit(); }
+                role: 'quit'
             },
         ]
     });
