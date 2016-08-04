@@ -3,7 +3,7 @@
  * Created by John on 13-07-2016.
  */
 import * as electron from "electron";
-import {menuTemplate} from "../menu/menuTemplate";
+import {menuTemplate, addMacMenu} from "../menu/menuTemplate";
 import * as Collections from 'typescript-collections';
 import MenuItemOptions = Electron.MenuItemOptions;
 import MenuItem = Electron.MenuItem;
@@ -82,6 +82,8 @@ export class Configuration {
                 if (error) {
                     throw error;
                 }
+                
+                electron.remote.dialog.showMessageBox({type: "info", title: "Save", buttons: ["OK"], message: "Configuration was successfully saved as '" + json.rootClass + "'."});
             });
         }
     }
@@ -122,10 +124,10 @@ export class Configuration {
             // Create template
             var template = <MenuItemOptions[]>menuTemplate;
             template.unshift({
-                label: 'Config',
+                label: 'File',
                 submenu: [
                     {
-                        label: 'Recent',
+                        label: 'Load',
                         submenu: rootClasses
                     },
                     {
@@ -137,6 +139,8 @@ export class Configuration {
                     }
                 ]
             });
+            addMacMenu(template);
+            
             // Setup menu
             self._menu = electron.remote.Menu.buildFromTemplate(template);
             electron.remote.Menu.setApplicationMenu(self._menu);
