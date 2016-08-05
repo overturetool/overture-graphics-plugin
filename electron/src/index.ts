@@ -9,9 +9,13 @@ import {PlotController} from "./plot/PlotController";
 import {SubscriptionClient} from "./protocol/SubscriptionClient";
 import {RunFunctionPickerController} from "./configuration/RunFunctionPickerController";
 import {Configuration} from "./configuration/Configuration";
+import {menuTemplate, addMacMenu} from "./menu/menuTemplate";
+import MenuItemOptions = Electron.MenuItemOptions;
 import * as electron from "electron";
 
 async function main() {
+    setupMenu();
+
     // Start WebSocket client
     let client = new SubscriptionClient();
     await client.connect("ws://localhost:8080/subscription");
@@ -73,6 +77,29 @@ async function main() {
     window.onbeforeunload = (e: Event) => { 
         client.stop();
     }
+}
+
+function setupMenu() {
+    // Create template
+    var template = <MenuItemOptions[]>menuTemplate;
+    template.unshift({
+        label: 'File',
+        submenu: [
+            {
+                label: 'Load',
+                submenu: []
+            },
+            {
+                label: 'Save',
+                accelerator: 'CmdOrCtrl+S'
+            }
+        ]
+    });
+    addMacMenu(template);
+    
+    // Setup menu
+    var _menu = electron.remote.Menu.buildFromTemplate(template);
+    electron.remote.Menu.setApplicationMenu(_menu);
 }
 
 main();

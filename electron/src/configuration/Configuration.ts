@@ -123,23 +123,10 @@ export class Configuration {
             });
             // Create template
             var template = <MenuItemOptions[]>menuTemplate;
-            template.unshift({
-                label: 'File',
-                submenu: [
-                    {
-                        label: 'Load',
-                        submenu: rootClasses
-                    },
-                    {
-                        label: 'Save',
-                        accelerator: 'CmdOrCtrl+S',
-                        click() {
-                            self.save();
-                        }
-                    }
-                ]
-            });
-            addMacMenu(template);
+            var fileMenu = template.find(x => x.label === 'File');
+            if(fileMenu != null) {
+                fileMenu.submenu = rootClasses;
+            }
             
             // Setup menu
             self._menu = electron.remote.Menu.buildFromTemplate(template);
