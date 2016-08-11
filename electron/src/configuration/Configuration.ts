@@ -3,6 +3,8 @@
  * Created by John on 13-07-2016.
  */
 import * as electron from "electron";
+import * as FileSystem from "fs";
+import * as Util from "util";
 import {menuTemplate, addMacMenu} from "../menu/menuTemplate";
 import * as Collections from 'typescript-collections';
 import MenuItemOptions = Electron.MenuItemOptions;
@@ -10,7 +12,7 @@ import MenuItem = Electron.MenuItem;
 import Menu = Electron.Menu;
 import BrowserWindow = Electron.BrowserWindow;
 import {Plot, PlotType} from "../model/Plot";
-import * as ElectronStorage from "electron-json-storage";
+const Dialog = electron.remote.dialog;
 
 export class Configuration {
     get runFunction(): string {
@@ -27,47 +29,24 @@ export class Configuration {
     set rootClass(value: string) {
         this._rootClass = value;
     }
-    private _rootClass: string;
-    private _runFunction: string;
+    private _rootClass: string = "";
+    private _runFunction: string = "";
     private _menu: Menu;
 
-    static SAVE_KEY_PREFIX: string = "TEMPO-";
     plots: Collections.Dictionary<string, { variables: string[], type: PlotType }>;
     onLoad: (cfg: Configuration) => void;
 
     constructor() {
         // Create configuraton tab in menu
-        this.plots = new Collections.Dictionary<string, { variables: string[], type: PlotType }>()
-        this.setupMenu();
+        this.plots = new Collections.Dictionary<string, { variables: string[], type: PlotType }>();
     }
 
-    loadByRootClass(root: string) {
-        var self = this;
-        ElectronStorage.get(self.getSaveKeyFromRootClass(root), (error: any, data: any) => {
-            if (error) {
-                throw error;
-            }
-
-            self.rootClass = data.rootClass;
-            self.runFunction = data.runFunction;
-            self.plots.clear();
-            if(data.plots !== undefined && data.plots.table !== undefined) {
-                for (let pi in data.plots.table) {
-                    let key = data.plots.table[pi].key;
-                    let value = data.plots.table[pi].value;
-                    self.plots.setValue(key, value);
-                }
-            }
-
-            if (self.onLoad !== undefined) {
-                self.onLoad(self);
-            }
-
-            console.log(self);
-        });
+    addPlot(title: string, variables: string[], type: PlotType) {
+        this.plots.setValue(title, { variables, type });
     }
 
-    save() {
+    save(item: MenuItem, window: BrowserWindow) {
+        console.log(this.rootClass);
         if (this.rootClass !== "") {
             var json : any = {
                 rootClass: this.rootClass
@@ -78,94 +57,81 @@ export class Configuration {
             if(!this.plots.isEmpty()) {
                 json.plots = this.plots;
             }
-            ElectronStorage.set(this.getSaveKeyFromRootClass(this.rootClass), json, (error) => {
-                if (error) {
-                    throw error;
-                }
-                
-                electron.remote.dialog.showMessageBox({type: "info", title: "Save", buttons: ["OK"], message: "Configuration was successfully saved as '" + json.rootClass + "'."});
+
+            Dialog.showSaveDialog({
+                filters: [
+                    {name: 'JSON (*.json)', extensions: ['json']},
+                    {name: 'All Files', extensions: ['*']}
+                ]
+            }, (fileName: string) => {
+                if (fileName === undefined){
+                    Dialog.showMessageBox({type: "warning", title: "No filename.", buttons: ["OK"], message: "You did not provide a filename."});
+                    return;
+                } 
+                FileSystem.writeFile(fileName, JSON.stringify(json), 'utf8', function (err) {
+                    if(err){
+                        Dialog.showMessageBox({type: "error", title: "Error.", buttons: ["OK"], message: "An error ocurred creating the file: "+ err.message});
+                    }
+                                    
+                    Dialog.showMessageBox({type: "info", title: "File created.", buttons: ["OK"], message: "Configuration was successfully saved as '" + fileName + "'."});
+                });
             });
+        }
+        else {
+            Dialog.showMessageBox({type: "warning", title: "Empty configuration.", buttons: ["OK"], message: "Configuration is empty. Select a root class before saving."});
         }
     }
 
-    addPlot(title: string, variables: string[], type: PlotType) {
-        this.plots.setValue(title, { variables, type });
-    }
-
-    setupMenu() {
-        let self = this;
-
-        ElectronStorage.keys((error, keys) => {
-            if (error) {
-                throw error;
-            }
-
-            // Filter: Only look at saved configurations
-            var keysFiltered = keys.filter(self.isKeyRootClass);
-
-            // Create rootclass submenu
-            var rootClasses = keysFiltered.map((key) => {
-                return {
-                    label: self.getRootClassFromSaveKey(key),
-                    submenu: [
-                        {
-                            label: "Load",
-                            sublabel: self.getRootClassFromSaveKey(key),
-                            click: self.onClickLoad.bind(self)
-                        },
-                        {
-                            label: "Remove",
-                            sublabel: self.getRootClassFromSaveKey(key),
-                            click: self.onClickRemove.bind(self)
+    load(item: MenuItem, window: BrowserWindow) {
+        var self = this;
+        
+        Dialog.showOpenDialog({
+            filters: [
+                {name: 'JSON (*.json)', extensions: ['json']},
+                {name: 'All Files', extensions: ['*']}
+            ]
+        }, (fileNames : string[]) => {
+            if(fileNames === undefined) {
+                console.log("No file selected");
+            } else {
+                var filepath = fileNames[0];
+                FileSystem.readFile(filepath, 'utf8', (err, rawData) => {
+                    try {
+                        let data = JSON.parse(rawData);
+                        
+                        if(data.rootClass === undefined || data.rootClass === null || data.rootClass === "") {
+                            Dialog.showMessageBox({type: "error", title: "Wrong format.", buttons: ["OK"], message: "File format error. No root class found in file."});
+                            return;
                         }
-                    ]
-                };
-            });
-            // Create template
-            var template = <MenuItemOptions[]>menuTemplate;
-            var fileMenu = template.find(x => x.label === 'File');
-            if(fileMenu != null) {
-                fileMenu.submenu = rootClasses;
-            }
-            
-            // Setup menu
-            self._menu = electron.remote.Menu.buildFromTemplate(template);
-            electron.remote.Menu.setApplicationMenu(self._menu);
-        });
-    }
 
-    onClickLoad(item: MenuItem, window: BrowserWindow) {
-        let rootClass = item.sublabel;
-        this.loadByRootClass(rootClass);
-    }
+                        self.rootClass = data.rootClass;
+                        self.runFunction = data.runFunction;
+                        self.plots.clear();
+                        if(data.plots !== undefined && data.plots.table !== undefined) {
+                            for (let pi in data.plots.table) {
+                                let key = data.plots.table[pi].key;
+                                let value = data.plots.table[pi].value;
+                                self.plots.setValue(key, value);
+                            }
+                        }
 
-    onClickRemove(item: MenuItem, window: BrowserWindow) {
-        let self = this;
-        let saveKey = this.getSaveKeyFromRootClass(item.sublabel);
-        ElectronStorage.remove(saveKey, (error) => {
-            if (error) {
-                throw error;
-            }
+                        if (self.onLoad !== undefined) {
+                            self.onLoad(self);
+                        }
+                    }
+                    catch(e) {
+                        err = {
+                            name: "FileFormatException",
+                            message: "File format error."
+                        };
+                    }
 
-            // Remove the item
-            let cfgMenu = <Menu>self._menu.items[0].submenu;
-            let recentSubMenu = <Menu>cfgMenu.items[0].submenu;
-            let index = recentSubMenu.items.findIndex((i) => i.label === item.sublabel);
-            if(index !== undefined) {
-                recentSubMenu.items[index].visible = false;
+                    if(err) {
+                        Dialog.showMessageBox({type: "error", title: "Error", buttons: ["OK"], message: "An error ocurred reading the file: " + err.message});
+                        return;
+                    }
+                });
             }
         });
-    }
-
-    private getSaveKeyFromRootClass(rootClass: string): string {
-        return Configuration.SAVE_KEY_PREFIX + rootClass;
-    }
-
-    private getRootClassFromSaveKey(rootClass: string): string {
-        return rootClass.replace(Configuration.SAVE_KEY_PREFIX, "");
-    }
-
-    private isKeyRootClass(saveKey: string): boolean {
-        return saveKey.substr(0, 6) === Configuration.SAVE_KEY_PREFIX;
     }
 }

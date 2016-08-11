@@ -13,6 +13,8 @@ import {menuTemplate, addMacMenu} from "./menu/menuTemplate";
 import MenuItemOptions = Electron.MenuItemOptions;
 import * as electron from "electron";
 
+let cfg: Configuration = new Configuration();
+
 async function main() {
     setupMenu();
 
@@ -25,7 +27,6 @@ async function main() {
     let menuHandler: AppMenuHandler = new AppMenuHandler();
     let browserController: BrowserController = new BrowserController(menuHandler);
     let windowCtrl = new WindowController(browserController, title);
-    let cfg: Configuration = new Configuration();
     let plotController: PlotController = new PlotController(menuHandler, client, browserController, cfg);
     let rootPickerCtrl: RootClassPickerController = new RootClassPickerController(client, menuHandler, windowCtrl, cfg);
     let runPickerCtrl: RunFunctionPickerController = new RunFunctionPickerController(client, menuHandler, cfg);
@@ -87,11 +88,12 @@ function setupMenu() {
         submenu: [
             {
                 label: 'Load',
-                submenu: []
+                click: cfg.load.bind(cfg)
             },
             {
                 label: 'Save',
-                accelerator: 'CmdOrCtrl+S'
+                accelerator: 'CmdOrCtrl+S',
+                click: cfg.save.bind(cfg)
             }
         ]
     });
