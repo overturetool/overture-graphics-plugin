@@ -6,6 +6,7 @@ class NestedTest
 
     var_real:real;
     nestedObject:TestNested := new TestNested();
+    sequence:seq of real := [1,2,3,4,5];
 
     operations
 
@@ -17,6 +18,11 @@ class NestedTest
    for all v in set {1,...,10} do
  (
      var_real:=var_real+1;
+     sequence(1):=sequence(1)+1;
+     sequence(2):=sequence(2)+2;
+     sequence(3):=sequence(3)+3;
+     sequence(4):=sequence(4)+4;
+     sequence(5):=sequence(5)+5;
      nestedObject.r1:=nestedObject.r1+2;
      skip;
      IO`println("updated");
@@ -41,7 +47,7 @@ end TestNested
 class IO
 
 operations
-public static println:seq of ? ==>()
+public static println: ? ==>()
 println(l)==is not yet specified;
 
 end IO

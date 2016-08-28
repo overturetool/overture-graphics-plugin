@@ -4,12 +4,20 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASetType;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.protocol.ModelStructure;
 import org.overturetool.plotting.protocol.Node;
+
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Created by John on 26-05-2016.
@@ -118,6 +126,32 @@ public class ModelStructureBuilder
 					if (!innercdef.equals(cdef))
 					{
 						readInstanceVarsFromClass(innercdef, newNode, varName);
+					}
+				}
+
+				// Is instance variable a seq?
+				if (insVar.getExpType() instanceof ASeq1SeqType)
+				{
+					LinkedList<PExp> members = ((ASeqEnumSeqExp)insVar.getExpression()).getMembers();
+
+					// VDM indexing starting at 1:
+					int i = 1;
+					for (PExp member : members) {
+						Node seqMember = newNode.addNode(varName + "(" + i++ + ")", member.getType().toString());
+						seqMember.ptype = member.getType();
+					}
+				}
+
+				// Is instance variable a set?
+				if (insVar.getExpType() instanceof ASetType)
+				{
+					LinkedList<PExp> members = ((ASetEnumSetExp)insVar.getExpression()).getMembers();
+
+					// VDM indexing starting at 1:
+					int i = 1;
+					for (PExp member : members) {
+						Node setMember = newNode.addNode(varName + "(" + i++ + ")", member.getType().toString());
+						setMember.ptype = member.getType();
 					}
 				}
 				levels--;

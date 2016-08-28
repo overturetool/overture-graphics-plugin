@@ -14,6 +14,7 @@ export class Plot {
     private _title: string;
     private _type: PlotType;
     private _id: string;
+    private _time: number = 0;
 
     constructor(title: string, type: PlotType) {
         this._id = Guid.newGuid();
@@ -24,12 +25,15 @@ export class Plot {
     addPoint(variable: string, value: number) {
         var points: Points = this._data.getValue(variable);
 
+        if(this._time < points.y.length) {
+            this._time = points.y.length;
+        }
         if (points !== undefined) {
             switch (this._type) {
                 case PlotType.TwoDimensional:
                 case PlotType.List:
                     points.addPoint({
-                        x: points.y.length,
+                        x: this._time,
                         y: value,
                         z: points.zIndex
                     });
@@ -37,7 +41,7 @@ export class Plot {
                 case PlotType.ThreeDimensional:
                     points.addPoint({
                         x: [points.zIndex, points.zIndex + 1],
-                        y: [points.y.length, points.y.length],
+                        y: [this._time, this._time],
                         z: [value, value]
                     });
                     break;

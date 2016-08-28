@@ -8,11 +8,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
-import org.overture.interpreter.values.NameValuePairMap;
-import org.overture.interpreter.values.ObjectValue;
-import org.overture.interpreter.values.UpdatableValue;
-import org.overture.interpreter.values.Value;
-import org.overture.interpreter.values.ValueListener;
+import org.overture.interpreter.values.*;
 import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.protocol.ModelStructure;
 import org.overturetool.plotting.protocol.Node;
@@ -49,7 +45,7 @@ public class ModelInteraction
 		NameValuePairMap members;
 
 		// Tokenize variable name
-		StringTokenizer tokenizer = new StringTokenizer(var.name, ".");
+		StringTokenizer tokenizer = new StringTokenizer(var.name, ".()");
 		String[] tokens = new String[tokenizer.countTokens()];
 		for (int i = 0; tokenizer.hasMoreTokens(); i++)
 		{
@@ -73,8 +69,32 @@ public class ModelInteraction
 			}
 		}
 
-		// Find child object to bind to
-		if (v.deref() instanceof ObjectValue)
+		// If sequence, find indexed member to bind to
+		if (v.deref() instanceof SetValue)
+		{
+			ValueSet values = ((SetValue) v.deref()).values;
+			int index = Integer.parseInt(tokens[tokens.length - 1]) - 1; // Subtract VDM off by one indexing.
+			Value val = values.get(index);
+
+			if (val instanceof UpdatableValue)
+			{
+				((UpdatableValue) val).addListener(listener);
+			}
+		}
+		// If sequence, find indexed member to bind to
+		else if (v.deref() instanceof SeqValue)
+		{
+			ValueList values = ((SeqValue) v.deref()).values;
+			int index = Integer.parseInt(tokens[tokens.length - 1]) - 1; // Subtract VDM off by one indexing.
+			Value val = values.get(index);
+
+			if (val instanceof UpdatableValue)
+			{
+				((UpdatableValue) val).addListener(listener);
+			}
+		}
+		// If object, find child object to bind to
+		else if (v.deref() instanceof ObjectValue)
 		{
 			members = ((ObjectValue) v.deref()).members;
 			for (Map.Entry<ILexNameToken, Value> p : members.entrySet())

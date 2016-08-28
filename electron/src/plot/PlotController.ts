@@ -15,6 +15,7 @@ export class PlotController {
     private _form: W2UI.W2Form;
     private _grid: W2UI.W2Grid;
     private _cfg: Configuration;
+    private _coolDown: boolean = false;
 
     constructor(menuHandler: AppMenuHandler, subClient: SubscriptionClient, browserCtrl: BrowserController, cfg: Configuration) {
         this._menuHandler = menuHandler;
@@ -60,8 +61,19 @@ export class PlotController {
 
                     var variableNames = this.record["field_list"];
                     var varNamesStripped = new Array<string>();
+                    
                     for (let variable of variableNames) {
-                        varNamesStripped.push(variable.text)
+                        if(model.isListType(variable.text)) {
+                            let listVars = vars.filter(x => 
+                                x.value.indexOf(variable.value) != -1 && 
+                                x.value !== variable.value);
+                            for(let listVar of listVars) {
+                                varNamesStripped.push(listVar.value);
+                            }
+                        }
+                        else {
+                            varNamesStripped.push(variable.value);
+                        }
                     }
 
                     await self.createPlot(title, varNamesStripped, <PlotType>type);
@@ -74,7 +86,7 @@ export class PlotController {
 
     getExistingVariables(variables: string[]): string[] {
         // Check which of the given variables that exist, and return these
-        var existingVariables = variables;//new Array<string>();
+        var existingVariables = variables;
         return existingVariables;
     }
 
@@ -134,6 +146,7 @@ export class PlotController {
     }
 
     updatePlot(title: string) {
+        let self = this;
         let plot: Plot = this._plots.getValue(title);
         if (plot == null || <HTMLDivElement>document.querySelector("#plot") == undefined)
             return;
@@ -158,6 +171,10 @@ export class PlotController {
             let trace = { x: tracex, y: tracey, z: tracez };
 
             Plotly.restyle('plot', trace, indices);
+
+            // Enter cooldown period
+            self.coolDown = true;
+            setTimeout(() => self.coolDown = false, 1000);
         }
     }
 
@@ -220,11 +237,6 @@ export class PlotController {
                 zaxis: { title: 'Value' },
                 dragmode: 'turntable',
                 camera: {
-                    eye: {
-                        x: traces.length + 0.25,
-                        y: -1,
-                        z: 1.25
-                    },
                     up: {
                         x: 0,
                         y: 0,
