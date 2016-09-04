@@ -1,7 +1,7 @@
 {
   "name": "TEMPOPlottingTool",
   "productName": "TEMPO Plotting Tool",
-  "version": "1.0.4",
+  "version": "1.0.10",
   "description": "Tool for visualizing TEMPO model variables",
   "license": "MIT",
   "electronVersion": "0.36.0",
