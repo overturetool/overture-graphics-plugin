@@ -173,8 +173,8 @@ export class PlotController {
             Plotly.restyle('plot', trace, indices);
 
             // Enter cooldown period
-            self.coolDown = true;
-            setTimeout(() => self.coolDown = false, 1000);
+            self._coolDown = true;
+            setTimeout(() => self._coolDown = false, 1000);
         }
     }
 
