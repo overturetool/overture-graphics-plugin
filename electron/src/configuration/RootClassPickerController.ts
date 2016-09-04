@@ -62,7 +62,7 @@ export class RootClassPickerController {
         var response: string = await self.client.setRootClass(className);
 
         if(response === "OK") {
-            self.windowCtrl.titleText = "TEMPO Plotting Tool [" + className + "]";
+            self.windowCtrl.titleText = "Overture Graphics Plugin [" + className + "]";
             self.navigation.openRunFunctionPickerView();
             self.cfg.rootClass = className;
             return true;

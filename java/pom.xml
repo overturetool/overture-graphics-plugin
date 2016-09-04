@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.overture</groupId>
-  <artifactId>overture-plotting-tool</artifactId>
+  <artifactId>overture-graphics-plugin</artifactId>
   <version>1.0.11-SNAPSHOT</version>
 
   <properties>

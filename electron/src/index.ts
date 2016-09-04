@@ -23,7 +23,7 @@ async function main() {
     await client.connect("ws://localhost:8080/subscription");
 
     // Initialise controllers
-    let title = "TEMPO Plotting Tool [No root class]";
+    let title = "Overture Graphics Plugin [No root class]";
     let menuHandler: AppMenuHandler = new AppMenuHandler();
     let browserController: BrowserController = new BrowserController(menuHandler);
     let windowCtrl = new WindowController(browserController, title);

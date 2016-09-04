@@ -1,6 +1,6 @@
 {
   "name": "tempo-ui",
-  "productName": "TEMPO Plotting Tool",
+  "productName": "Overture Graphics Plugin",
   "version": "1.0.0",
   "description": "Tool for visualizing TEMPO model variables",
   "license": "MIT",
