@@ -1,8 +1,8 @@
 {
-  "name": "TEMPOPlottingTool",
-  "productName": "TEMPO Plotting Tool",
+  "name": "overture-graphics-plugin",
+  "productName": "Overture Graphics Plugin",
   "version": "1.0.10",
-  "description": "Tool for visualizing TEMPO model variables",
+  "description": "Tool for visualizing VDM model variables",
   "license": "MIT",
   "electronVersion": "0.36.0",
   "scripts": {
@@ -10,9 +10,9 @@
   },
   "main": "dist/main.js",
   "author": {
-    "name": "TEMPO Project",
+    "name": "Overture Tool",
     "email": "",
-    "url": "http://tempo.au.dk/"
+    "url": "http://overturetool.org/"
   },
   "dependencies": {
     "bootstrap": "^3.3.6",

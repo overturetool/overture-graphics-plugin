@@ -1,4 +1,4 @@
-﻿# tempo-plotting-tool
+﻿# overture-graphics-plugin
 
 ### Electron 
 ##### Initialize

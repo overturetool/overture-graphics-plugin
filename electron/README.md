@@ -1,6 +1,6 @@
-tempo-ui
+overture-graphics-plugin electron
 ---
-Tool for visualizing TEMPO model variables.
+GUI for visualizing VDM model variables.
 
 
 How to build
