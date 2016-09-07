@@ -9,7 +9,6 @@ import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.ASetType;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overturetool.plotting.exceptions.RootClassException;
@@ -143,7 +142,7 @@ public class ModelStructureBuilder
 				}
 
 				// Is instance variable a set?
-				if (insVar.getExpType() instanceof ASetType)
+				/*if (insVar.getExpType() instanceof ASetType)
 				{
 					LinkedList<PExp> members = ((ASetEnumSetExp)insVar.getExpression()).getMembers();
 
@@ -153,7 +152,7 @@ public class ModelStructureBuilder
 						Node setMember = newNode.addNode(varName + "(" + i++ + ")", member.getType().toString());
 						setMember.ptype = member.getType();
 					}
-				}
+				}*/
 				levels--;
 			}
 

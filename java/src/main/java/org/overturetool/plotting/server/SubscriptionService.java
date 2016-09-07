@@ -15,7 +15,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
-import org.overturetool.plotting.exceptions.RootClassException;
 import org.overturetool.plotting.handlers.MessageHandler;
 import org.overturetool.plotting.protocol.Error;
 import org.overturetool.plotting.protocol.Message;
