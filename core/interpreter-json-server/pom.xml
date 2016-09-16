@@ -2,13 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.overture</groupId>
-  <artifactId>overture-graphics-plugin</artifactId>
-  <version>1.0.11-SNAPSHOT</version>
+  <parent>
+    <groupId>org.overturetool.graphics</groupId>
+    <artifactId>core</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
+
+  <groupId>org.overturetool.core.graphics</groupId>
+  <artifactId>interpreter-json-server</artifactId>
+<name>Overture Graphics value interpreter with JSON</name>
   <properties>
     <jetty.version>9.2.11.v20150529</jetty.version>
-    <overture.version>2.4.0</overture.version>
   </properties>
 
   <dependencies>
