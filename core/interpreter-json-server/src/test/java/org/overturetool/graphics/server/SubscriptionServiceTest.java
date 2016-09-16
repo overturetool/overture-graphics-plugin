@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.overturetool.graphics.MessageUtil;
 import org.overturetool.graphics.RunModel;
 import org.overturetool.graphics.client.SubscriptionClient;
-import org.overturetool.graphics.interpreter.TempoRemoteControl;
+import org.overturetool.graphics.interpreter.JsonServerRemoteControl;
 import org.overturetool.graphics.protocol.Response;
 
 import com.google.gson.JsonElement;
@@ -84,7 +84,7 @@ public class SubscriptionServiceTest
 	{
 		Semaphore sem = new Semaphore(1);
 		sem.acquire();
-		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		final JsonServerRemoteControl remote = new JsonServerRemoteControl(controller -> sem.release());
 		Thread t = new Thread(() -> {
 			try
 			{
@@ -124,7 +124,7 @@ public class SubscriptionServiceTest
 	{
 		Semaphore sem = new Semaphore(1);
 		sem.acquire();
-		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		final JsonServerRemoteControl remote = new JsonServerRemoteControl(controller -> sem.release());
 		Thread t = new Thread(() -> {
 			try
 			{
@@ -161,7 +161,7 @@ public class SubscriptionServiceTest
 	{
 		Semaphore sem = new Semaphore(1);
 		sem.acquire();
-		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		final JsonServerRemoteControl remote = new JsonServerRemoteControl(controller -> sem.release());
 		Thread t = new Thread(() -> {
 			try
 			{
@@ -204,7 +204,7 @@ public class SubscriptionServiceTest
 		Semaphore sem = new Semaphore(1);
 		sem.acquire();
 
-		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		final JsonServerRemoteControl remote = new JsonServerRemoteControl(controller -> sem.release());
 		Thread t = new Thread(() -> {
 			try
 			{
@@ -249,7 +249,7 @@ public class SubscriptionServiceTest
 		Semaphore sem = new Semaphore(1);
 		sem.acquire();
 
-		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		final JsonServerRemoteControl remote = new JsonServerRemoteControl(controller -> sem.release());
 		Thread t = new Thread(() -> {
 			try
 			{
@@ -307,7 +307,7 @@ public class SubscriptionServiceTest
 		Semaphore sem = new Semaphore(1);
 		sem.acquire();
 
-		final TempoRemoteControl remote = new TempoRemoteControl(controller -> sem.release());
+		final JsonServerRemoteControl remote = new JsonServerRemoteControl(controller -> sem.release());
 		Thread t = new Thread(() -> {
 			try
 			{

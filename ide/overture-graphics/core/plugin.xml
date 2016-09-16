@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.overturetool.graphics.ide.addgraphicslibrary"
+            name="Add Graphics Library">
+      </command>
+      
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.menus">
+         <menuContribution
+           locationURI="popup:org.overture.ide.ui.VdmExplorer">
+        <menu
+              id="org.overturetool.graphics.ide.menu"
+              label="Overture">
+           
+           
+            <command
+                 commandId="org.overturetool.graphics.ide.addgraphicslibrary"
+                 icon="icons/internalize.gif"
+                 label="Add Overture Graphic Library"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate
+                       ifEmpty="false">
+                     
+                            <adapt
+                            type="org.overture.ide.core.resources.IVdmProject">
+                         
+                         <or>
+                         	<test
+	                               property="org.overture.ide.core.resources.dialect"
+	                               value="VDM_RT">
+	                        </test>
+	                        <test
+	                               property="org.overture.ide.core.resources.dialect"
+	                               value="VDM_PP">
+	                        </test>
+                         </or>
+                      </adapt>
+                       
+                 </iterate>
+              </visibleWhen>
+           </command>
+        </menu>
+     </menuContribution>
+   </extension>
+    <extension
+          point="org.eclipse.ui.handlers">
+          
+           <handler
+            class="org.overturetool.graphics.ide.ide.overturegraphics.handlers.AddGraphicsLibraryHandler"
+            commandId="org.overturetool.graphics.ide.addgraphicslibrary">    
+      		</handler>
+    </extension>
+
+
+	<!-- Shoutcut for launching project. Extends the Debug and Run context menu in the VDM Explorer -->
+ <extension point="org.eclipse.debug.ui.launchShortcuts">
+  <shortcut
+        class="org.overturetool.graphics.ide.vdmpp.launchconfigurations.GraphicsVdmPpApplicationLaunchShortcut"
+        id="org.overturetool.graphics.ide.localVdmPpShortcut"
+        label="Vdm Graphics Application"
+        modes="debug,run">
+     <contextualLaunch>
+           <enablement>
+             <with variable="selection">
+             <count value="1"/>
+                <iterate>
+                   <or>
+                      <adapt
+                            type="org.overture.ide.core.resources.IVdmProject">
+                         <test
+                               property="org.overture.ide.core.resources.dialect"
+                               value="VDM_PP">
+                         </test>
+                      </adapt>
+                   </or>
+                </iterate>
+           	</with>
+           </enablement>
+  		 </contextualLaunch>
+     <configurationType
+           id="org.overture.ide.vdmpp.debug.launchConfigurationType">
+     </configurationType>
+  </shortcut>
+ </extension>
+ 
+ 
+ <extension point="org.eclipse.debug.ui.launchShortcuts">
+  <shortcut
+        class="org.overturetool.graphics.ide.vdmpp.launchconfigurations.GraphicsVdmRtApplicationLaunchShortcut"
+        id="org.overturetool.graphics.ide.localVdmRtShortcut"
+        label="Vdm Graphics Application"
+        modes="debug,run">
+     <contextualLaunch>
+           <enablement>
+             <with variable="selection">
+             <count value="1"/>
+                <iterate>
+                   <or>
+                      <adapt
+                            type="org.overture.ide.core.resources.IVdmProject">
+                         <test
+                               property="org.overture.ide.core.resources.dialect"
+                               value="VDM_RT">
+                         </test>
+                      </adapt>
+                   </or>
+                </iterate>
+           	</with>
+           </enablement>
+  		 </contextualLaunch>
+     <configurationType
+           id="org.overture.ide.vdmrt.debug.launchConfigurationType">
+     </configurationType>
+  </shortcut>
+ </extension>
+</plugin>

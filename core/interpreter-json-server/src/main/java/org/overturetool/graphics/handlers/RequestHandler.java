@@ -7,7 +7,7 @@ import java.util.List;
 import javax.websocket.Session;
 
 import org.overturetool.graphics.interpreter.ModelInteraction;
-import org.overturetool.graphics.interpreter.TempoRemoteControl;
+import org.overturetool.graphics.interpreter.JsonServerRemoteControl;
 import org.overturetool.graphics.protocol.Message;
 import org.overturetool.graphics.protocol.ModelStructure;
 import org.overturetool.graphics.protocol.Request;
@@ -23,10 +23,10 @@ import com.google.gson.reflect.TypeToken;
 public class RequestHandler extends MessageHandler<Request>
 {
 	private ModelInteraction modelInteraction;
-	private TempoRemoteControl remoteControl;
+	private JsonServerRemoteControl remoteControl;
 
 	public RequestHandler(ModelInteraction modelInteraction,
-			TempoRemoteControl remoteControl)
+			JsonServerRemoteControl remoteControl)
 	{
 
 		this.modelInteraction = modelInteraction;

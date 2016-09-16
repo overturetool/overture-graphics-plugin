@@ -7,11 +7,11 @@ import org.overturetool.graphics.handlers.RequestHandler;
 import org.overturetool.graphics.handlers.SubscriptionHandler;
 import org.overturetool.graphics.server.SubscriptionService;
 
-public class TempoRemoteControl implements RemoteControl
+public class JsonServerRemoteControl implements RemoteControl
 {
 	public interface IInterpreterReadyCallback
 	{
-		void initialized(TempoRemoteControl controller);
+		void initialized(JsonServerRemoteControl controller);
 	}
 
 	private IInterpreterReadyCallback callback = null;
@@ -26,12 +26,12 @@ public class TempoRemoteControl implements RemoteControl
 	 * @param callback
 	 *            a callback called once the controller is initialized
 	 */
-	public TempoRemoteControl(IInterpreterReadyCallback callback)
+	public JsonServerRemoteControl(IInterpreterReadyCallback callback)
 	{
 		this.callback = callback;
 	}
 
-	public TempoRemoteControl()
+	public JsonServerRemoteControl()
 	{
 	}
 

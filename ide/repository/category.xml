@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.overturetool.graphics.ide.features.overture-graphics_0.0.1.qualifier.jar" id="org.overturetool.graphics.ide.features.overture-graphics" version="0.0.1.qualifier">
+      <category name="org.overturetool.graphics.ide.id"/>
+   </feature>
+   <category-def name="org.overturetool.graphics.ide.id" label="Overture Graphics Interpreter">
+      <description>
+         This feature adds FMI a custom interpreter which can observer values changes during execution and serve this through JSON. It also includes an Electron front end to observe the value changes during execution.
+      </description>
+   </category-def>
+</site>
