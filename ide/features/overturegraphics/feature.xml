@@ -2,7 +2,9 @@
 <feature
       id="org.overturetool.graphics.ide.features.overturegraphics"
       label="Overture Graphics"
-      version="0.0.1.qualifier">
+      version="0.0.1.qualifier"
+      os="macosx"
+      arch="x86,x86_64">
 
    <description>
       %description
