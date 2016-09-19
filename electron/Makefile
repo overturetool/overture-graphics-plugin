@@ -11,7 +11,7 @@ package: compile
 	gulp package-all
 #	cd pkg; zip -r overture-graphics-plugin-darwin-x64.zip overture-graphics-plugin-darwin-x64
 
-compress
+compress:
 	cd pkg; for i in */; do zip -r "${i%/}.zip" "$i"; done
 
 prepare:
