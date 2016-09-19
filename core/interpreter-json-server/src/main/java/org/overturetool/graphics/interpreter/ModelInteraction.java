@@ -128,7 +128,6 @@ public class ModelInteraction
 	/**
 	 * Returns root class name
 	 * 
-	 * @return
 	 */
 	public String getRootClassName()
 	{
@@ -138,7 +137,6 @@ public class ModelInteraction
 	/**
 	 * Searches for root class and returns it.
 	 * 
-	 * @return
 	 */
 	public SClassDefinition getRootClass()
 	{
@@ -155,7 +153,6 @@ public class ModelInteraction
 	/**
 	 * Searches returns all class names
 	 *
-	 * @return
 	 */
 	public List<String> getClassNames()
 	{
@@ -172,7 +169,6 @@ public class ModelInteraction
 	/**
 	 * Gets operations of root class
 	 * 
-	 * @return
 	 */
 	public List<String> getOperationNames()
 	{
@@ -202,7 +198,6 @@ public class ModelInteraction
 	/**
 	 * Returns the model structure
 	 * 
-	 * @return
 	 */
 	public ModelStructure getModelStructure() throws RootClassException
 	{
@@ -218,7 +213,6 @@ public class ModelInteraction
 	 * the model exits
 	 * 
 	 * @param runExp
-	 * @return
 	 * @throws Exception
 	 */
 	public Value start(String runExp) throws Exception
