@@ -15,13 +15,14 @@
          <menuContribution
            locationURI="popup:org.overture.ide.ui.VdmExplorer">
         <menu
+              icon="icons/graph_nodes_16.png"
               id="org.overturetool.graphics.ide.menu"
-              label="Overture">
+              label="Overture Graphics">
            
            
             <command
                  commandId="org.overturetool.graphics.ide.addgraphicslibrary"
-                 icon="icons/internalize.gif"
+                 icon="icons/layer-vector-add_16.png"
                  label="Add Overture Graphic Library"
                  style="push">
               <visibleWhen
@@ -64,6 +65,7 @@
  <extension point="org.eclipse.debug.ui.launchShortcuts">
   <shortcut
         class="org.overturetool.graphics.ide.vdmpp.launchconfigurations.GraphicsVdmPpApplicationLaunchShortcut"
+        icon="icons/graph_nodes_16.png"
         id="org.overturetool.graphics.ide.localVdmPpShortcut"
         label="Vdm Graphics Application"
         modes="debug,run">

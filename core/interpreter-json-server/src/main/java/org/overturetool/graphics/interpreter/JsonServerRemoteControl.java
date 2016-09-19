@@ -1,5 +1,12 @@
 package org.overturetool.graphics.interpreter;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map.Entry;
+import java.util.Properties;
+
 import org.overture.interpreter.debug.RemoteControl;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.values.Value;
@@ -59,7 +66,6 @@ public class JsonServerRemoteControl implements RemoteControl
 	 * the model exits
 	 * 
 	 * @param runExp
-	 * @return
 	 * @throws Exception
 	 */
 	public Value start(String runExp) throws Exception
@@ -91,5 +97,102 @@ public class JsonServerRemoteControl implements RemoteControl
 		this.subSvc.addMessageHandler(rqHandler);
 		this.subSvc.addMessageHandler(subscriptionHandler);
 		this.subSvc.startServer(8080);
+
+		InputStream proFile = this.getClass().getClassLoader().getResourceAsStream("overture.graphics.properties");
+		if (proFile != null)
+		{
+			Properties prop = new Properties();
+			try
+			{
+				prop.load(proFile);
+
+				for (Entry<Object, Object> p : prop.entrySet())
+				{
+					System.out.println(p.getKey() + " = " + p.getValue());
+				}
+				if (prop.getOrDefault("auto.launch", "false").equals("true"))
+				{
+					launchElectron(prop);
+				}
+			} catch (IOException e)
+			{
+			}
+		}
+	}
+
+	private void launchElectron(Properties prop) throws IOException
+	{
+
+		String path = prop.getProperty("path");
+		if (path == null)
+		{
+			return;
+		}
+
+		File pathFile = new File(path);
+		if (pathFile.exists())
+		{
+			addExecutePermissions(pathFile);
+			launch(pathFile);
+		} else
+		{
+			System.err.println("The path: '" + pathFile.getAbsolutePath()
+					+ "' does not exist");
+		}
+
+	}
+
+	private void launch(File pathFile) throws IOException
+	{
+		switch (PlatformUtil.getOS())
+		{
+			case MAC:
+				ProcessBuilder pb = new ProcessBuilder("open", "-n", ".");
+				pb.directory(pathFile);
+				try
+				{
+					pb.start().waitFor();
+				} catch (InterruptedException e)
+				{
+				}
+				break;
+			case LINUX:
+			case SOLARIS:
+			case WINDOWS:
+				Desktop.getDesktop().open(pathFile);
+				break;
+			default:
+				break;
+		}
+
+	}
+
+	private void addExecutePermissions(File pathFile) throws IOException
+	{
+		File dir = pathFile;
+		// fix permissions
+		switch (PlatformUtil.getOS())
+		{
+			case LINUX:
+				dir = pathFile.getParentFile();
+			case MAC:
+				ProcessBuilder pb = new ProcessBuilder("chmod", "-R", "+x", ".");
+				pb.directory(dir);
+				try
+				{
+					pb.start().waitFor();
+				} catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case SOLARIS:
+				break;
+			case WINDOWS:
+				break;
+			default:
+				break;
+		}
 	}
 }

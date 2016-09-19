@@ -47,7 +47,7 @@
     
   </fileset>
 </unzip>
-        
+<chmod dir="${basedir}/electron" perm="744" />        
               </target>
             </configuration>
           </execution>

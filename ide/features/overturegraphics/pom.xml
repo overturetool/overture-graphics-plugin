@@ -12,6 +12,6 @@
   
   <packaging>eclipse-feature</packaging>
 
-  <artifactId>org.overturetool.graphics.ide.features.overture-graphics</artifactId>
+  <artifactId>org.overturetool.graphics.ide.features.overturegraphics</artifactId>
 <name>Overture IDE Eclipse graphics core feature</name>  
 </project>

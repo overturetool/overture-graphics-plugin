@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -11,10 +13,12 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.overture.ast.node.INode;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.ui.launchconfigurations.LauncherMessages;
 import org.overture.ide.vdmpp.debug.ui.launchconfigurations.VdmPpApplicationLaunchShortcut;
+import org.overturetool.graphics.ide.ide.overturegraphics.handlers.AddGraphicsLibraryHandler;
 import org.overturetool.graphics.interpreter.JsonServerRemoteControl;
 
 public class GraphicsVdmPpApplicationLaunchShortcut extends
@@ -35,7 +39,8 @@ public class GraphicsVdmPpApplicationLaunchShortcut extends
 
 				String pName = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, "");
 
-				if (pName.equalsIgnoreCase(projectName) && config.getName().contains("-graphics"))
+				if (pName.equalsIgnoreCase(projectName)
+						&& config.getName().contains("-graphics"))
 				{
 					candidateConfigs.add(config);
 				}
@@ -81,6 +86,16 @@ public class GraphicsVdmPpApplicationLaunchShortcut extends
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
 
 			config = wc.doSave();
+
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			if (project != null)
+			{
+				IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
+				if (p != null)
+				{
+					AddGraphicsLibraryHandler.addGraphicsLibrary(p);
+				}
+			}
 		} catch (CoreException exception)
 		{
 
@@ -88,5 +103,4 @@ public class GraphicsVdmPpApplicationLaunchShortcut extends
 		}
 		return config;
 	}
-
 }

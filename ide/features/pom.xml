@@ -16,7 +16,7 @@
   <name>Overture IDE Eclipse graphics features</name>
   
   <modules>
-   <module>overture-graphics</module>
+   <module>overturegraphics</module>
   </modules>
 
 </project>
