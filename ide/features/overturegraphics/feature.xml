@@ -28,6 +28,7 @@
    <plugin
          id="org.overturetool.ide.overturegraphics.macosx.x86_64"
          os="macosx"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
