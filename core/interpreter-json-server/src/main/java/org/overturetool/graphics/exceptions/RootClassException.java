@@ -5,6 +5,11 @@ package org.overturetool.graphics.exceptions;
  */
 public class RootClassException extends Exception
 {
+	/**
+	 * serial
+	 */
+	private static final long serialVersionUID = 7733144344533219813L;
+
 	public RootClassException()
 	{
 		super();
