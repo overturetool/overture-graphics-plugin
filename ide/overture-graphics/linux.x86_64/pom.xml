@@ -25,7 +25,7 @@
         <executions>
           <execution>
             <id>copy-dependencies</id>
-            <phase>package</phase>
+            <phase>process-resources</phase>
             <goals>
               <goal>run</goal>
             </goals>
