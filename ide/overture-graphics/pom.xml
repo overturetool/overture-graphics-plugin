@@ -19,9 +19,9 @@
 	<modules>
 		<module>core</module>
 		<module>macosx.x86_64</module>
-		<!--module>win32.win32</module>
-		<module>linux.x86</module>
-		<module>linux.x86_64</module-->
+		<module>win32.win32</module>
+		<module>win32.win64</module>
+		<module>linux.x86_64</module>
 	</modules>
 	
 </project>

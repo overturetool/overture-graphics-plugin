@@ -32,4 +32,31 @@
          version="0.0.0"
          fragment="true"/>
 
+   <plugin
+         id="org.overturetool.ide.overturegraphics.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.overturetool.ide.overturegraphics.win32.win32"
+         os="win32"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.overturetool.ide.overturegraphics.win32.win64"
+         os="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
 </feature>

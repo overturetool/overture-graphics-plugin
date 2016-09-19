@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.overturetool.ide.graphics</groupId>
 		<artifactId>org.overturetool.ide.overturegraphics</artifactId>
@@ -9,14 +10,15 @@
 	</parent>
 
 	<packaging>eclipse-plugin</packaging>
-	<artifactId>org.overturetool.ide.overturegraphics.macosx.x86_64</artifactId>
+	<artifactId>org.overturetool.ide.overturegraphics.win32.win64</artifactId>
 
 	<properties>
-		<electron.zip>overture-graphics-plugin-darwin-x64.zip</electron.zip>
+		<electron.zip>overture-graphics-plugin-win32-x64.zip</electron.zip>
 	</properties>
 
 	<build>
 		<plugins>
+
 			<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -42,6 +44,4 @@
       </plugin>
 		</plugins>
 	</build>
-
-
 </project>
