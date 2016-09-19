@@ -9,7 +9,10 @@ compile: prepare
 package: compile
 #	gulp package-darwin
 	gulp package-all
-	cd pkg; zip -r overture-graphics-plugin-darwin-x64.zip overture-graphics-plugin-darwin-x64
+#	cd pkg; zip -r overture-graphics-plugin-darwin-x64.zip overture-graphics-plugin-darwin-x64
+
+compress
+	cd pkg; for i in */; do zip -r "${i%/}.zip" "$i"; done
 
 prepare:
 	npm install --no-progress
