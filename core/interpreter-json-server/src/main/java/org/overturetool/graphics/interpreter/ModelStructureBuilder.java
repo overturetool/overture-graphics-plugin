@@ -21,7 +21,6 @@ import org.overturetool.graphics.protocol.Node;
  */
 public class ModelStructureBuilder
 {
-	private static final String ROOT_VAR_NAME = "root";
 	private RemoteInterpreter interpreter;
 	private int levels = 0;
 	private boolean debug = false;
@@ -50,7 +49,6 @@ public class ModelStructureBuilder
 	/**
 	 * Finds root class and builds model structure from it
 	 * 
-	 * @return
 	 */
 	public ModelStructure build() throws RootClassException
 	{
