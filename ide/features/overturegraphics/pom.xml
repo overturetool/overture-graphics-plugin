@@ -6,7 +6,7 @@
  <groupId>org.overturetool.graphics.ide</groupId>
   <artifactId>org.overturetool.graphics.ide.features</artifactId>
 
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.1.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   

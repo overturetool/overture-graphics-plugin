@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.overturetool.graphics.ide.features.overturegraphics_0.0.1.qualifier.jar" id="org.overturetool.graphics.ide.features.overturegraphics" version="0.0.1.qualifier">
+   <feature url="features/org.overturetool.graphics.ide.features.overturegraphics_1.1.2.jar" id="org.overturetool.graphics.ide.features.overturegraphics" version="1.1.2">
       <category name="org.overturetool.graphics.ide.id"/>
    </feature>
    <category-def name="org.overturetool.graphics.ide.id" label="Overture Graphics Interpreter">
