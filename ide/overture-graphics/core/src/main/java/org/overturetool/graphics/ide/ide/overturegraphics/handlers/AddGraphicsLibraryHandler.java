@@ -111,7 +111,7 @@ public class AddGraphicsLibraryHandler extends
 		switch (PlatformUtil.getOS())
 		{
 			case LINUX:
-				path = new Path("electron/overture-graphics-plugin-linux-x64.zip/overture-graphics-plugin");
+				path = new Path("electron/overture-graphics-plugin-linux-x64/overture-graphics-plugin");
 
 				break;
 			case MAC:
