@@ -12,7 +12,7 @@
 
   <groupId>org.overturetool.core.graphics</groupId>
   <artifactId>interpreter-json-server</artifactId>
-<name>Overture Graphics value interpreter with JSON</name>
+	<name>Overture Graphics value interpreter with JSON</name>
   <properties>
     <jetty.version>9.2.11.v20150529</jetty.version>
   </properties>
@@ -93,7 +93,7 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.version}</version>
       </plugin>
-    
+			
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -119,6 +119,18 @@
 					</execution>
 				</executions>
 			</plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+
+
+
     </plugins>
 
 
@@ -189,12 +201,6 @@
     </pluginManagement>
   </build>
 
-	<scm>
-		<url>git@github.com:overturetool/tempo-plotting-tool.git</url>
-		<connection>scm:git:git://github.com/overturetool/tempo-plotting-tool.git</connection>
-		<developerConnection>scm:git:git@github.com:overturetool/tempo-plotting-tool.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
 
 	<developers>
 		<developer>
