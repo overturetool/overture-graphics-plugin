@@ -147,6 +147,7 @@ public class JsonServerRemoteControl implements RemoteControl
 		switch (PlatformUtil.getOS())
 		{
 			case MAC:
+			{
 				ProcessBuilder pb = new ProcessBuilder("open", "-n", ".");
 				pb.directory(pathFile);
 				try
@@ -155,8 +156,21 @@ public class JsonServerRemoteControl implements RemoteControl
 				} catch (InterruptedException e)
 				{
 				}
-				break;
+			}
+			break;
 			case LINUX:
+			{
+				System.out.println(pathFile.getName());
+				ProcessBuilder pb = new ProcessBuilder("./"+pathFile.getName(), "&");
+				pb.directory(pathFile.getParentFile());
+				try
+				{
+					pb.start().waitFor();
+				} catch (InterruptedException e)
+				{
+				}
+			}
+				break;
 			case SOLARIS:
 			case WINDOWS:
 				Desktop.getDesktop().open(pathFile);
