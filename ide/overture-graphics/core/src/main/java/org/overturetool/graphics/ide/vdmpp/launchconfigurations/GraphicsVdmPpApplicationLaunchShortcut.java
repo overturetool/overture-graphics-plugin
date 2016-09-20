@@ -12,6 +12,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableContext;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
@@ -24,6 +25,26 @@ import org.overturetool.graphics.interpreter.JsonServerRemoteControl;
 public class GraphicsVdmPpApplicationLaunchShortcut extends
 		VdmPpApplicationLaunchShortcut
 {
+
+	protected INode[] filterTypes(Object[] elements, IRunnableContext context)
+	{
+		INode[] nodes = super.filterTypes(elements, context);
+		if (nodes.length > 0)
+		{
+			return new INode[] { nodes[0] };
+		}
+		return nodes;
+	}
+
+	protected INode chooseType(INode[] types, String title)
+	{
+		if (types.length > 0)
+		{
+			return types[0];
+		}
+
+		return null;
+	}
 
 	protected ILaunchConfiguration findLaunchConfiguration(String projectName,
 			ILaunchConfigurationType configType)
